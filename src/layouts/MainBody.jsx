@@ -189,71 +189,25 @@ const MainBody = () => {
         setButtonVisible(false);
         setModal(!modal);
         //이미지 존재여부 확인
-        // //--------- 파이썬 백엔드 코드--------- 
-        // if (imageFile) {
-        //     const formdata = new FormData();// FormData 객체를 생성
-        //     formdata.append('file', imageFile); // FormData에 이미지 파일을 추가
-        //     const queryParams = new URLSearchParams({ filter_index: mappedValues });
-
-        //     // HTTP 요청 헤더 설정
-        //     const config = {
-        //         headers: {
-        //             'content-type': 'multipart/form-data',// 멀티파트 형식으로 데이터를
-        //             'ngrok-skip-browser-warning': '69420',
-        //             //'filter_index': mappedValues,
-        //             //'filter_index:': JSON.stringify(mappedValues)
-        //             //mappedValues
-        //         },
-        //     };
-        //     const imageUrl = uploadedImage.src;
-        //     //post로 이미지 데이터 전달 
-        //     axios.post(`https://bbc5-183-102-204-80.ngrok-free.app/api/recommend_place/?${queryParams}`, formdata, config)
-        //         .then(
-        //             (response) => {
-        //                 // 응답 데이터를 가져옴
-        //                 const jsonData = response.data;
-        //                 setModalIsOpen(false);
-        //                 console.log("0");
-        //                 console.log(jsonData);
-
-        //                 //                 const jsonData2 = response.data;
-        //                 // setLoading(false);
-        //                 //search 페이지로 이동하고, 상태를 전달
-        //                 //navigate('/search', { state: { jsonData } });
-        //                 navigate('/search', { state: { jsonData, uploadedImage: imageUrl, imageFile: imageFile } });
-
-
-        //             }
-        //         )
-        //         .catch(error => {
-        //             console.error(error);
-        //             navigate('/fail');
-        //         });
-        //}
-
-        // JSON 문자열을 파이썬 리스트로 변환
-        //python_list = json.loads(json_string)
-
-
-        //        --------- 스프링 백엔드 코드--------- 
+        //--------- 파이썬 백엔드 코드--------- 
         if (imageFile) {
             const formdata = new FormData();// FormData 객체를 생성
-            formdata.append('image', imageFile); // FormData에 이미지 파일을 추가
-            formdata.append('userId', '1');// FormData에 사용자 ID를 추가
-            //formdata.append('checkbox', mappedValues); // FormData에 추가적인 데이터를 추가
+            formdata.append('file', imageFile); // FormData에 이미지 파일을 추가
+            const queryParams = new URLSearchParams({ filter_index: mappedValues });
 
             // HTTP 요청 헤더 설정
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data',// 멀티파트 형식으로 데이터를
-                    'checkbox': JSON.stringify(mappedValues)
+                    'ngrok-skip-browser-warning': '69420',
+                    //'filter_index': mappedValues,
+                    //'filter_index:': JSON.stringify(mappedValues)
+                    //mappedValues
                 },
             };
-            console.log(JSON.stringify((mappedValues)));
             const imageUrl = uploadedImage.src;
-
             //post로 이미지 데이터 전달 
-            axios.post('/recommend_place', formdata, config)
+            axios.post(`https://bbc5-183-102-204-80.ngrok-free.app/api/recommend_place/?${queryParams}`, formdata, config)
                 .then(
                     (response) => {
                         // 응답 데이터를 가져옴
@@ -262,10 +216,12 @@ const MainBody = () => {
                         console.log("0");
                         console.log(jsonData);
 
-                        //const jsonData2 = response.data;
-
+                        //                 const jsonData2 = response.data;
+                        // setLoading(false);
                         //search 페이지로 이동하고, 상태를 전달
+                        //navigate('/search', { state: { jsonData } });
                         navigate('/search', { state: { jsonData, uploadedImage: imageUrl, imageFile: imageFile } });
+
 
                     }
                 )
@@ -274,10 +230,51 @@ const MainBody = () => {
                     navigate('/fail');
                 });
         }
-        console.log('Button clicked!');
+
+        //        --------- 스프링 백엔드 코드--------- 
+        //     if (imageFile) {
+        //         const formdata = new FormData();// FormData 객체를 생성
+        //         formdata.append('image', imageFile); // FormData에 이미지 파일을 추가
+        //         formdata.append('userId', '1');// FormData에 사용자 ID를 추가
+        //         //formdata.append('checkbox', mappedValues); // FormData에 추가적인 데이터를 추가
+
+        //         // HTTP 요청 헤더 설정
+        //         const config = {
+        //             headers: {
+        //                 'content-type': 'multipart/form-data',// 멀티파트 형식으로 데이터를
+        //                 'checkbox': JSON.stringify(mappedValues)
+        //             },
+        //         };
+        //         console.log(JSON.stringify((mappedValues)));
+        //         const imageUrl = uploadedImage.src;
+
+        //         //post로 이미지 데이터 전달 
+        //         axios.post('/recommend_place', formdata, config)
+        //             .then(
+        //                 (response) => {
+        //                     // 응답 데이터를 가져옴
+        //                     const jsonData = response.data;
+        //                     setModalIsOpen(false);
+        //                     console.log("0");
+        //                     console.log(jsonData);
+
+        //                     //const jsonData2 = response.data;
+
+        //                     //search 페이지로 이동하고, 상태를 전달
+        //                     navigate('/search', { state: { jsonData, uploadedImage: imageUrl, imageFile: imageFile } });
+
+        //                 }
+        //             )
+        //             .catch(error => {
+        //                 console.error(error);
+        //                 navigate('/fail');
+        //             });
+        //     }
+        //     console.log('Button clicked!');
 
     }
 
+    //체크박스 선택시 나타나는 이미지 설정
     const backgroundImageStyle = {
         backgroundImage: checkedValues[0] && !checkedValues[1] ? "url('./img/incheon3.jpeg')" :
             !checkedValues[0] && checkedValues[1] ? "url('./img/seoul2.jpeg')" :
@@ -329,8 +326,6 @@ const MainBody = () => {
     return (
         <>
             <div className="mt-10">
-                {/* <Demo /> */}
-
                 <div>
                     <div className='w-full'>
                         {/* <input type="file" onChange={onChange} /> */}
