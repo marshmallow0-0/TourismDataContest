@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 프로젝트 제목 
 ## 시작 방법 
 - 이 프로젝트는 현재 백엔드가 파이썬인 경우에만 돌아간다.          
@@ -36,3 +37,7 @@ sideBar, navBar 로 구성할 예정
 
 ## 사용 기술 
 React, Tailwind.css
+=======
+# RIA-PJT
+Capstone Project RIA 
+>>>>>>> dc93571d17ee0e18bd0a2710bde6cd91124e9d71
