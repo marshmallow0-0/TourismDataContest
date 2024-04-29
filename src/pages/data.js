@@ -74,3 +74,28 @@ export const Sidebar = [
         title: 'Namsan'
     },
 ];
+
+export const MEMBERINTRODUCE = [
+    {
+        image: './img/member_1.png',
+        title: '정기홍',
+        description: '백엔드_팀장'
+    },
+    {
+        image: './img/member_4.png',
+        title: '이유신',
+        description: '프론트_부팀장'
+    },
+    {
+        image: './img/member_2.png',
+        title: '마서영',
+        description: '백엔드_서기'
+    },
+    {
+        image: './img/member_3.png',
+        title: '고지수',
+        description: '프론트_회계'
+    },
+
+
+];
