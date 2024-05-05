@@ -16,7 +16,7 @@ const PublicDataMap = ({ mapx, mapy, ml, category }) => {
                     params: { mapX: mapx, mapY: mapy, radius: 2000, userId: "USER00" }
                 });
                 const jsonData = response.data;
-
+                console.log(jsonData);
                 const mapContainer = document.getElementById('map');
                 const mapOption = {
                     center: new window.kakao.maps.LatLng(mapy, mapx),
@@ -68,7 +68,8 @@ const PublicDataMap = ({ mapx, mapy, ml, category }) => {
                                     </div>
                                     <div class="body" style="position: relative; overflow: hidden;">
                                         <div class="img" style="position: absolute; top: 13px; left: 5px; width: 73px; height: 60px; border-radius: 15px; border: 1px solid #ddd; color: #888; overflow: hidden;">
-                                            <div style="background-image: url('restaurant_overlay.png'); height: 60px; width: 73px;"></div>
+                                        <img src="${data.firstimage2 ? data.firstimage2 : './img/not_image.png'}" style="height: 60px; width: 73px;">
+
                                         </div>
                                         <div class="desc" style="position: relative; margin: 13px 0 0 90px; height: 75px; font-size: 12px; overflow: hidden; text-overflow: ellipsis;">
                                             ${data.addr1 ? `<span title="${data.addr1}" style="">도로명 : ${data.addr1}<br> </span>` : `<span title="${data.address_name}">지번 : ${data.address_name}</span>`}
