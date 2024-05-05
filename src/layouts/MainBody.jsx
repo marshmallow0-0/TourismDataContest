@@ -207,7 +207,7 @@ const MainBody = () => {
             };
             const imageUrl = uploadedImage.src;
             //post로 이미지 데이터 전달 
-            axios.post(`https://bbc5-183-102-204-80.ngrok-free.app/api/recommend_place/?${queryParams}`, formdata, config)
+            axios.post(`https://577e-118-235-15-146.ngrok-free.app/api/recommend_place/?${queryParams}`, formdata, config)
                 .then(
                     (response) => {
                         // 응답 데이터를 가져옴
@@ -227,50 +227,51 @@ const MainBody = () => {
                 )
                 .catch(error => {
                     console.error(error);
-                    navigate('/fail');
+                    navigate('/fail', { state: { uploadedImage: imageUrl } });
+
                 });
         }
 
         //        --------- 스프링 백엔드 코드--------- 
-        //     if (imageFile) {
-        //         const formdata = new FormData();// FormData 객체를 생성
-        //         formdata.append('image', imageFile); // FormData에 이미지 파일을 추가
-        //         formdata.append('userId', '1');// FormData에 사용자 ID를 추가
-        //         //formdata.append('checkbox', mappedValues); // FormData에 추가적인 데이터를 추가
+        // if (imageFile) {
+        //     const formdata = new FormData();// FormData 객체를 생성
+        //     formdata.append('image', imageFile); // FormData에 이미지 파일을 추가
+        //     formdata.append('userId', '1');// FormData에 사용자 ID를 추가
+        //     //formdata.append('checkbox', mappedValues); // FormData에 추가적인 데이터를 추가
 
-        //         // HTTP 요청 헤더 설정
-        //         const config = {
-        //             headers: {
-        //                 'content-type': 'multipart/form-data',// 멀티파트 형식으로 데이터를
-        //                 'checkbox': JSON.stringify(mappedValues)
-        //             },
-        //         };
-        //         console.log(JSON.stringify((mappedValues)));
-        //         const imageUrl = uploadedImage.src;
+        //     // HTTP 요청 헤더 설정
+        //     const config = {
+        //         headers: {
+        //             'content-type': 'multipart/form-data',// 멀티파트 형식으로 데이터를
+        //             'checkbox': JSON.stringify(mappedValues)
+        //         },
+        //     };
+        //     console.log(JSON.stringify((mappedValues)));
+        //     const imageUrl = uploadedImage.src;
 
-        //         //post로 이미지 데이터 전달 
-        //         axios.post('/recommend_place', formdata, config)
-        //             .then(
-        //                 (response) => {
-        //                     // 응답 데이터를 가져옴
-        //                     const jsonData = response.data;
-        //                     setModalIsOpen(false);
-        //                     console.log("0");
-        //                     console.log(jsonData);
+        //     //post로 이미지 데이터 전달 
+        //     axios.post('/recommend_place', formdata, config)
+        //         .then(
+        //             (response) => {
+        //                 // 응답 데이터를 가져옴
+        //                 const jsonData = response.data;
+        //                 setModalIsOpen(false);
+        //                 console.log("0");
+        //                 console.log(jsonData);
 
-        //                     //const jsonData2 = response.data;
+        //                 //const jsonData2 = response.data;
 
-        //                     //search 페이지로 이동하고, 상태를 전달
-        //                     navigate('/search', { state: { jsonData, uploadedImage: imageUrl, imageFile: imageFile } });
+        //                 //search 페이지로 이동하고, 상태를 전달
+        //                 navigate('/search', { state: { jsonData, uploadedImage: imageUrl, imageFile: imageFile } });
 
-        //                 }
-        //             )
-        //             .catch(error => {
-        //                 console.error(error);
-        //                 navigate('/fail');
-        //             });
-        //     }
-        //     console.log('Button clicked!');
+        //             }
+        //         )
+        //         .catch(error => {
+        //             console.error(error);
+        //             navigate('/fail');
+        //         });
+        // }
+        // console.log('Button clicked!');
 
     }
 
@@ -278,7 +279,7 @@ const MainBody = () => {
     const backgroundImageStyle = {
         backgroundImage: checkedValues[0] && !checkedValues[1] ? "url('./img/incheon3.jpeg')" :
             !checkedValues[0] && checkedValues[1] ? "url('./img/seoul2.jpeg')" :
-                checkedValues[0] && checkedValues[1] ? "url('./img/korea.jpg')" :
+                checkedValues[0] && checkedValues[1] ? "url('./img/korea.png')" :
                     "url('./img/selectRegion.png')", // 모두 선택하지 않은 경우를 기본 이미지로 설정 
 
         backgroundSize: checkedValues[0] && !checkedValues[1] ? '100% 100%' : // 첫 번째 이미지 크기
@@ -345,8 +346,8 @@ const MainBody = () => {
 
                                 {buttonVisible &&
                                     <button
-                                        className={`${isImageUploaded ? "bg-blue-700" : "bg-gray-600"} w-28 h-10 text-center mt-2 mb-2 rounded-md inline text-xs text-white font-Pretendard`}
-                                        onClick={() => { handleButtonClick(); }}>
+                                        className={`${isImageUploaded ? "bg-indigo-700" : "bg-gray-600"} w-28 h-10 text-center mt-2 mb-2 rounded-md inline text-xs text-white font-Pretendard`}
+                                        onClick={isImageUploaded ? () => { handleButtonClick(); } : null}>
                                         Ai Search
                                     </button>
                                 }
@@ -354,19 +355,20 @@ const MainBody = () => {
                                 {!buttonVisible && !modalIsOpen &&
                                     <ModalExample />
                                 }
-                                <button className="w-28 h-10 text-center bg-lime-700 inline-block rounded-md px-2 py-2 text-xs text-white font-Pretendard" onClick={() => handleHowButtonClick()}>How to use</button>
+                                <button className="w-28 h-10 text-center bg-indigo-700 inline-block rounded-md px-2 py-2 text-xs text-white font-Pretendard" onClick={() => handleHowButtonClick()}>How to use</button>
                             </div>
                         </div >
 
-                        <div className='flex flex-row justify-center items-center mt-10 gap-20'>
+                        <div className='flex flex-row justify-center items-center ml-14 mt-10 gap-20'>
 
-                            <div className="text-right">
+                            <div className="text-right border-dashed border-2 border-gray-500 rounded-md">
                                 <div className="flex flex-col items-center">
-                                    <div className="ml-28">
-                                        {cropData && <img className="w-72 h-60" src={cropData} alt="" />}
+                                    <div className="border">
+                                        {cropData ? (cropData && <img className=" mr-2 ml-2 mt-2 mb-2 w-72 h-60" src={cropData} alt=" " />) : (<img className="mr-2 ml-2 mt-2 mb-2 w-72 h-60" src="./img/no_image.png" />)}
                                     </div>
-                                    <p className="text-md font-Pretendard">Cropped Image</p>
-
+                                    <br />
+                                    <p className="text-md font-Pretendard text-semibold">Cropped Image</p>
+                                    <br />
                                 </div>
                             </div>
                             <div className="flex flex-col ml-10">
@@ -387,7 +389,7 @@ const MainBody = () => {
                                     checkOrientation={false}
                                     guides={true}
                                 />
-                                <button className="mt-3 w-28 h-10 bg-blue-700 rounded-md px-2 py-2 text-xs text-white font-Pretendard" onClick={getCropData}>
+                                <button className="mt-3 w-28 h-10 bg-indigo-700 rounded-md px-2 py-2 text-xs text-white font-Pretendard" onClick={getCropData}>
                                     Crop
                                 </button>
                             </div>
@@ -425,9 +427,9 @@ const MainBody = () => {
                     </div>
                 </div>
 
-                < div id="email-newsletter" className="my-30 flex justify-around p-20" >
+                < div id="email-newsletter" className="my-30 flex justify-around p-20 font-Pretendard" >
                     <div>
-                        <p className="ml-20 letter text-2xl font-serif p-3 underline decoration-indigo-500">Ria-2JMU <br />Email Newsletter</p>
+                        <p className="ml-20 letter text-2xl p-3 underline decoration-indigo-500">Ria-2JMU <br />Email Newsletter</p>
                     </div>
                     <div className="mr-20">
                         <input type="text" name="email" id="email" className="block mb-3 w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
