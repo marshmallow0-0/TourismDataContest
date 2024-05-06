@@ -54,6 +54,10 @@ export const NOTUPLOAD = [
     {
         image: './img/in_drop_box.png',
         title: 'no_upload_img'
+    },
+    {
+        image: './img/how_drop_box.png',
+        title: 'how_to_drop_box'
     }
 ];
 
