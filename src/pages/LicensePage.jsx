@@ -24,7 +24,12 @@ function LicensePage() {
                 <li>
                     <strong>Image 6:</strong> rightArrow2.png <a href="https://www.flaticon.com/kr/free-icons/" title="다음 아이콘">다음 아이콘 제작자: Roundicons - Flaticon</a>
                 </li>
-
+                <li>
+                    <strong>Image 7:</strong> cafe_icon.png <a href="https://www.flaticon.com/kr/free-icons/" title="커피 아이콘">커피 아이콘 제작자: surang - Flaticon</a>
+                </li>
+                <li>
+                    <strong>Image 8:</strong> food_icon.png <a href="https://www.flaticon.com/kr/free-icons/" title="쌀 아이콘">쌀 아이콘 제작자: Freepik - Flaticon</a>
+                </li>
             </ul>
             <p>All images used are protected by copyright law. Usage of the images is permitted only with the permission of the copyright holder or as permitted by copyright law.</p>
         </div>
