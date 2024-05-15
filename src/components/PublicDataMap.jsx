@@ -73,8 +73,10 @@ const PublicDataMap = ({ mapx, mapy, ml, category }) => {
                                         </div>
                                         <div class="desc" style="position: relative; margin: 13px 0 0 90px; height: 75px; font-size: 12px; overflow: hidden; text-overflow: ellipsis;">
                                             ${data.addr1 ? `<span title="${data.addr1}" style="">도로명 : ${data.addr1}<br> </span>` : `<span title="${data.address_name}">지번 : ${data.address_name}</span>`}
-                                            <span class="tel" style="position: relative;">tel : ${data.tel}</span></br>
-                                        </div>
+                                            ${data.tel ? `<span class="tel" style="position: relative;">tel : ${data.tel}</span></br>` : ''}
+                                            <span class="dist" style="position: relative;">거리 :  ${parseInt(data.dist)}m</span></br>
+
+                                            </div>
                                     </div>
                                 </div>
                             </div>`;
