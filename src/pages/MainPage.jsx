@@ -14,7 +14,7 @@ const MainPage = () => {
                 <SidebarContent
                     image={Banners[1].image}
                     title="Incheon"
-                    subtitle="Songdo"
+                    subtitle="CentralPark"
                 />
                 <SidebarContent
                     image="./img/LotteTower.jpg"
