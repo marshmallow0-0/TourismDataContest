@@ -376,7 +376,7 @@ const MainBody = () => {
                                     ref={cropperRef}
                                     className='w-96 h-96'
                                     style={{ height: "20em", width: "20em" }}
-                                    zoomTo={0.5}
+                                    zoomTo={0.2}
                                     initialAspectRatio={1}
                                     preview=".img-preview"
                                     src={image}
