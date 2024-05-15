@@ -81,24 +81,28 @@ export const Sidebar = [
 
 export const MEMBERINTRODUCE = [
     {
-        image: './img/member_1.png',
+        role: 1,
+        image: './img/member_Sungui.jpg',
         title: '정기홍',
-        description: '백엔드_팀장'
+        description: `Back-End Leader`
     },
     {
-        image: './img/member_4.png',
+        role: 2,
+        image: './img/member_gyeyang.jpg',
         title: '이유신',
-        description: '프론트_부팀장'
+        description: 'Front-End'
     },
     {
-        image: './img/member_2.png',
+        role: 3,
+        image: './img/member_bucheon.jpg',
         title: '마서영',
-        description: '백엔드_서기'
+        description: 'Back-End'
     },
     {
-        image: './img/member_3.png',
+        role: 4,
+        image: './img/member_songdo.jpg',
         title: '고지수',
-        description: '프론트_회계'
+        description: 'Front-End'
     },
 
 
