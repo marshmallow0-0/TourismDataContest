@@ -10,15 +10,9 @@ const WhoWeArePage = () => {
     const { ref, animation } = useObserver();
     return (
         <BasicLayout>
-            <div className="grid grid-cols-2 gap-1 my-30 mx-80 place-content-center">
-                {MEMBERINTRODUCE.map((guide) => <motion.div
-                    ref={ref}
-                    initial=""
-                    //animate={animation}
-                    variants={opacityVariants}
-                ><Memberinfo {...guide} />
-
-                </motion.div>
+            <div className="max-w-3xl mx-auto grid grid-cols-2 gap-1 my-30  place-content-center">
+                {MEMBERINTRODUCE.map((guide) =>
+                    <Memberinfo {...guide} />
                 )}
             </div>
             <div className="mt-20"></div>
