@@ -1,0 +1,19 @@
+@keyframes gradient-diagonal {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 50% 50%;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+.animate-gradient-diagonal {
+    animation: gradient-diagonal 5s linear alternate;
+    background-image: linear-gradient(to bottom right, #5281a5, #ff7e5f);
+    background-size: 200% 200%;
+}
