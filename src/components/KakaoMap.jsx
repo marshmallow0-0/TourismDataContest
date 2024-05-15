@@ -216,9 +216,9 @@ const KakaoMap = ({ mapx, mapy, category }) => {
                         `<div class="close" style="position: absolute; top:4px; right:10px; color: #888; width:17px; height:17;">X</div>` +
                         `</div>
                             <div class="body" style="position: relative; overflow:hidden">
-                                <div class="img" style="position:absolute; top:13px; left:5px; width: 73; height:60px; border-radius-15px; border: 1px solid #ddd; color:#888; overflow:hidden"> 
-                                    <div style="background-image : url("info.png"); height:60; width:73;"></div>
-                                </div>
+                            <div class="img" style="position: absolute; top: 13px; left: 5px; width: 73px; height: 60px; border-radius: 15px; border: 1px solid #ddd; color: #888; overflow: hidden;">
+                            <img src="./img/cafe_icon.png" style="height: 60px; width: 73px;">
+                            </div>
 
                                 <div class="desc" style="position: relative; margin: 13px 0 0 90px; height: 75px;font-size: 12px; overflow:hidden; text-overflow: ellipsis; ">
                                     ${place.road_address_name ?
@@ -250,9 +250,9 @@ const KakaoMap = ({ mapx, mapy, category }) => {
                         `<div class="close" style="position: absolute; top:4px; right:10px; color: #888; width:17px; height:17;">X</div>` +
                         `</div>
                             <div class="body" style="position: relative; overflow:hidden">
-                                <div class="img" style="position:absolute; top:13px; left:5px; width: 73; height:60px; border-radius-15px; border: 1px solid #ddd; color:#888; overflow:hidden"> 
-                                    <div style="background-image : url("restaurant_overlay.png"); height:60; width:73;"></div>
-                                </div>
+                            <div class="img" style="position: absolute; top: 13px; left: 5px; width: 73px; height: 60px; border-radius: 15px; border: 1px solid #ddd; color: #888; overflow: hidden;">
+                            <img src="./img/food_icon.png" style="height: 60px; width: 73px;">
+                            </div>
 
                                 <div class="desc" style="position: relative; margin: 13px 0 0 90px; height: 75px;font-size: 12px; overflow:hidden; text-overflow: ellipsis; ">
                                     ${place.road_address_name ?
@@ -310,6 +310,7 @@ const KakaoMap = ({ mapx, mapy, category }) => {
 
                 // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
                 selectedMarker = marker;
+                infowindow.open(map, marker);
 
                 console.log("mouse click on");
             });
