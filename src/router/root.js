@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import SearchFailPage from "../pages/SearchFailPage";
 import LicensePage from "../pages/LicensePage";
+import Login from "../pages/LoginPage";
 const { createBrowserRouter } = require("react-router-dom");
 
 //TODO 
@@ -42,10 +43,10 @@ const root = createBrowserRouter([
     //     path: "/myprofile",
     //     element: <Suspense fallback={Loading}><MyProfile /></Suspense> //myprofile 라우트 추가 
     // },
-    // {
-    //     path: "/login",
-    //     element: <Suspense fallback={Loading}><Login /></Suspense>//login 라우트 추가 
-    // }
+    {
+        path: "/login",
+        element: <Suspense fallback={Loading}><Login /></Suspense>//login 라우트 추가 
+    }
 ])
 
 export default root;
