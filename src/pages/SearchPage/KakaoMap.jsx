@@ -272,7 +272,40 @@ const KakaoMap = ({ mapx, mapy, category }) => {
                      </div>
                     `;
                 }
+                else if (category === 'AT4') { // 관광지 overlay
+                    content =
+                        `
+                        <div class="wrap" style="paddinf:0; margin:0; position: absolute; left = 0; bottom:1px; width: 288px; height: 132px; margin-left:-144px; text-align:left; overflow:hidden; fint-size:12px; font-family: "Pretendard", dotum, 'Pretendard", "Pretendard";line-height: 1.5;>`+
+                        `<div class="info" style="width: 286px;height: 120px; border-radius:15px; box-shadow:0px 1px 2px #888 border-bottom:2px solid #ccc; border-right:1px solid #ccc;overflow: hidden; background: #fff;">` +
+                        `<div class="title" style="padding: 5px 0 0 10px; height:30px; background: rgba(254, 81, 106, 0.5); font-size:18px border-bottom:1px solid #ddd; font-weight: bold;">` +
+                        `<a class="titlea" href="${place.place_url}" style="color: blue; ">` +
+                        ` ${place.place_name}<br>` +
+                        `</a>` +
+                        `<div class="close" style="position: absolute; top:4px; right:10px; color: #888; width:17px; height:17;">X</div>` +
+                        `</div>
+                            <div class="body" style="position: relative; overflow:hidden">
+                            <div class="img" style="position: absolute; top: 13px; left: 5px; width: 73px; height: 60px; border-radius: 15px; border: 1px solid #ddd; color: #888; overflow: hidden;">
+                            <img src="./img/food_icon.png" style="height: 60px; width: 73px;">
+                            </div>
 
+                                <div class="desc" style="position: relative; margin: 13px 0 0 90px; height: 75px;font-size: 12px; overflow:hidden; text-overflow: ellipsis; ">
+                                    ${place.road_address_name ?
+                            `<span title="${place.road_address_name}" style="">도로명 : ${place.road_address_name}<br> </span>`
+                            // `<span class="jibun" title="${place.address_name}">(지번 : ${place.address_name}) <br> </span>`
+                            :
+                            `<span title="${place.address_name}">지번 : ${place.address_name}</span>`
+                        }
+                                    <span class="tel"style="position: relative;">tel : ${place.phone}</span>
+                                    </br>
+                                    <a class="url" href="${place.place_url}" style="color:blue; bottom:7px;">
+                                        ${place.place_name} 상세페이지
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                    `;
+                }
                 var overlay = new window.kakao.maps.CustomOverlay({
                     clickable: true,
                     content: content,
