@@ -2,9 +2,9 @@ import { Suspense, lazy } from "react";
 import SearchFailPage from "../pages/SearchPage/SearchFailPage.jsx";
 import LicensePage from "../pages/LicensePage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage.jsx";
-import Redirection from "../pages/dev/Redirection.jsx";
-import SupportPage from "../pages/SupportPage/SupportPage.jsx";
-import SupportFAQPage from "../pages/SupportPage/SupportFAQPage.jsx";
+// import Redirection from "../pages/dev/Redirection.jsx";
+// import SupportPage from "../pages/SupportPage/SupportPage.jsx";
+// import SupportFAQPage from "../pages/SupportPage/SupportFAQPage.jsx";
 import MyTravelRecordsForm from "../pages/TravelPage/TravelPage.jsx";
 import RootLayout from "../layouts/RootLayout.js";
 import { checkAuthLoader, tokenLoader } from "../util/auth.js";
@@ -63,22 +63,22 @@ const root = createBrowserRouter([
                 path: 'logout',
                 action: logoutAction,
             },
-            {
-                path: "kakao/callback",
-                element: <Suspense fallback={Loading}><Redirection /></Suspense>
-            },
+            // {
+            //     path: "kakao/callback",
+            //     element: <Suspense fallback={Loading}><Redirection /></Suspense>
+            // },
             {
                 path: "signup",
                 element: <Suspense fallback={Loading}><SignUpPage /></Suspense>
             },
-            {
-                path: "support",
-                element: <Suspense fallback={Loading}><SupportPage /></Suspense>
-            },
-            {
-                path: "support/faq",
-                element: <Suspense fallback={Loading}><SupportFAQPage /></Suspense>
-            },
+            // {
+            //     path: "support",
+            //     element: <Suspense fallback={Loading}><SupportPage /></Suspense>
+            // },
+            // {
+            //     path: "support/faq",
+            //     element: <Suspense fallback={Loading}><SupportFAQPage /></Suspense>
+            // },
             {
                 path: "travelrecord",
                 element: <Suspense fallback={Loading}><MyTravelRecordsForm /></Suspense>,
