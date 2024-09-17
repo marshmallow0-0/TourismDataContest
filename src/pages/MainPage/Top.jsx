@@ -1,32 +1,26 @@
 import React from 'react';
+import ImageGallery from '../SearchPage/ImageGallery';
 // import MainBody from './Body';
 //import MainpageBody from './MainPageBody'; ??
-import Section from './Section';
+//import Section from './Section';
+
 function Top() {
     return (
-        <div className="bg-white " style={{ scrollBehavior: 'smooth' }}>
+        <div className="bg-white max-w-full" style={{ scrollBehavior: 'smooth' }}>
             <header className="flex flex-col">
-                <div
-                    className="relative w-3/5 h-[50vh] bg-cover bg-no-repeat mx-auto px-4 py-6 flex justify-between"
-                    style={{ backgroundImage: 'url(./img/mainpageTop.png)' }}
-                >
-                    <img className='absolute  inset-0 flex m-auto  top-1/2 bottom-3 items-center justify-center w-32 h-32' src="./img/mainpageLogo.png" alt="logo" />
-                    <div className="absolute inset-x-0 bottom-3 flex items-center justify-center mb-3">
-                        <h1 className="text-4xl font-bold text-white">Recommend Image Area</h1>
-                    </div>
-
+                <div className="w-full h-[50vh] px-4 flex justify-center items-center relative">
+                    <ImageGallery />
                 </div>
-                <nav className="flex justify-center items-center space-x-20 text-center bg-indigo-800 h-10">
-                    <a href="#search" className="text-white">Go guides</a>
-                    <a href="#search" className="text-white">Search</a>
-                    <a href="#random" className="text-white">Random</a>
-                    <a href="#" className="text-white">Popular</a>
-                    <a href="#" className="text-white">News Letter</a>
+
+                <nav className="flex items-center border-b-4 border-gray-950 justify-evenly text-lg p-4 rounded-none sticky top-0 z-10">
+                    {/* <a href="#search" className="text-white">Go guides</a> */}
+                    <a href="#category" className="text-black font-bold">Category</a>
+                    <a href="#dropbox" className="text-black font-bold">DropBox</a>
+                    <a href="#random" className="text-black font-bold">Random</a>
+                    {/* <a href="#" className="text-white">Popular</a> */}
+                    {/* <a href="#" className="text-white">News Letter</a> */}
                 </nav>
             </header>
-            <main>
-                <Section />
-            </main>
         </div>
     );
 }

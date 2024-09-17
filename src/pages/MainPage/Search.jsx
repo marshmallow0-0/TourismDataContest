@@ -1,26 +1,41 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import Map from "./MapCity";
-// import CheckBoxArea from "./CheckBoxArea";
-// import Cropper from "react-cropper";
-// import "cropperjs/dist/cropper.css";
 
-// import { Banners, NOTUPLOAD } from "../pages/data";
-// import DragAndDropArea from "./DragAndDropArea";
-// import ImageCropper from "./ImageCropper";
-
-import CheckBoxArea from "./CheckBoxArea";
+import CheckBoxArea from './CheckBoxArea';
 import Map from './MapCity';
 import ImageCropper from './ImageCropper';
-import DragAndDropArea from '../../components/DragAndDropArea';
-
+import DragAndDropArea from './DragAndDropArea';
 import { imageActions } from '../../store/imageSlice';
+import Prompt from './Prompt';
 
-export default function () {
+import { getRecommendPlaces, getTouristImages, getRandomPlaces } from '../../api/api';
+
+
+export default function MainComponent() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [images, setImages] = useState([]); //api
+    const [places, setPlaces] = useState([]); //api
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const fetchedImages = await getTouristImages();
+    //             setImages(fetchedImages);
+
+    //             const fetchedPlaces = await getRandomPlaces();
+    //             setPlaces(fetchedPlaces);
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
+
 
     const {
         uploadedImage,
@@ -28,18 +43,26 @@ export default function () {
         imageFile,
         image,
         cropData
-    } = useSelector(state => {
-        console.log(state);
-        return state.image;
-    });
+    } = useSelector(state => state.image);
+
+
+    const {
+        //selectedCities,
+        checkboxes,
+    } = useSelector(state => state.checkbox);
+
+    const handleImageUpload = () => {
+        dispatch(imageActions.setIsImageUploaded(true));
+    };
 
     const [selectedCities, setSelectedCities] = useState([]);
+
     const [buttonVisible, setButtonVisible] = useState(true);
     const [modal, setModal] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [checkboxes, setCheckboxes] = useState([]);
-    const [checkedValues, setCheckedValues] = useState([true, true]);
-    const [mappedValues, setMappedValues] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    //const [checkboxes, setCheckboxes] = useState([]);
+    //const [checkedValues, setCheckedValues] = useState([true, true]);
+    //const [mappedValues, setMappedValues] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
     const handleCheckboxGroupChange = (updatedCheckboxes) => {
         let combinedLabels = [];
@@ -60,7 +83,7 @@ export default function () {
         const isSeoulChecked = updatedCheckboxes[1].isChecked;
 
         const updatedCheckedValues = updatedCheckboxes.map(cb => cb.isChecked);
-        setCheckedValues(updatedCheckedValues);
+        //setCheckedValues(updatedCheckedValues);
 
         localStorage.setItem('checkboxes', JSON.stringify(updatedCheckboxes));
 
@@ -78,15 +101,15 @@ export default function () {
         }
 
         const mappedValues = combinedLabels.map(label => mapping[label]);
-        setMappedValues(mappedValues);
-        setCheckboxes(updatedCheckboxes);
+        //setMappedValues(mappedValues);
+        //setCheckboxes(updatedCheckboxes);
     };
 
-    useEffect(() => {
-        if (uploadedImage) {
-            dispatch(imageActions.setIsImageUploaded(true));
-        }
-    }, [uploadedImage, dispatch]);
+    // useEffect(() => {
+    //     if (uploadedImage) {
+    //         dispatch(imageActions.setUploadedImage(uploadedImage));
+    //     }
+    // }, [uploadedImage, dispatch]);
 
     const handleDroppedFiles = (files) => {
         const file = files[0];
@@ -134,33 +157,39 @@ export default function () {
         }
     };
 
+
+    console.log("ImageFile:1 ", imageFile);
     const handleButtonClick = () => {
+        console.log("Button Clicked"); // 이 메시지가 출력되는지 확인
+        console.log("ImageFile:2 ", imageFile); // ImageFile의 상태를 확인
+
         setButtonVisible(false);
         setModal(!modal);
 
         if (imageFile) {
-            const formdata = new FormData();
-            formdata.append('file', imageFile);
-            const queryParams = new URLSearchParams({ filter_index: mappedValues });
-
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data',
-                    'ngrok-skip-browser-warning': '69420',
-                },
-            };
+            const formData = new FormData(); // FormData 객체 생성
+            formData.append('user_image', imageFile); // FastAPI에서의 파라미터 이름과 일치해야 합니다.
+            if (prompt) {
+                formData.append('user_text', prompt); // FastAPI에서의 파라미터 이름과 일치해야 합니다.
+            }
 
             const imageUrl = uploadedImage.src;
-            axios.post(`https://1a30-117-16-195-48.ngrok-free.app/api/recommend_place/?${queryParams}`, formdata, config)
-                .then((response) => {
-                    const jsonData = response.data;
+            console.log([...formData.entries()]);
+            // API 요청 함수 사용
+            getRecommendPlaces(formData)
+                .then((jsonData) => {
                     setModalIsOpen(false);
-                    navigate('/search', { state: { jsonData, uploadedImage: imageUrl, imageFile: imageFile } });
+                    console.log("0");
+                    console.log(jsonData);
+                    // search 페이지로 이동하고, 상태를 전달
+                    navigate('/search', { state: { jsonData, uploadedImage: imageUrl } });
                 })
                 .catch(error => {
                     console.error(error);
                     navigate('/fail', { state: { uploadedImage: imageUrl } });
                 });
+        } else {
+            console.error("Image file is missing");
         }
     };
 
@@ -176,6 +205,7 @@ export default function () {
             });
         }
     };
+
 
 
     const mapData = [
@@ -253,99 +283,119 @@ export default function () {
         // 나머지 도시들 추가
     ];
 
+    const firstRef = useRef(null);
+    const secondRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('opacity-0', 'translate-y-4');
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                    }
+                });
+            },
+            {
+                threshold: 0.5, // 30% of the element needs to be visible for the animation to trigger
+            }
+        );
+
+        if (firstRef.current) {
+            observer.observe(firstRef.current);
+        }
+
+        if (secondRef.current) {
+            observer.observe(secondRef.current);
+        }
+
+        return () => {
+            if (firstRef.current) {
+                observer.unobserve(firstRef.current);
+            }
+
+            if (secondRef.current) {
+                observer.unobserve(secondRef.current);
+            }
+        };
+    }, []);
+
     return (
-        <section >
-            <nav className="flex items-center text-center text-lg bg-indigo-800 h-10">
-                <span className="text-white">Search</span>
-            </nav>
-            <section className="flex justify-center mx-auto">
-                <div className="w-72 h-72 mr-4">
-                    <Map heatmapData={mapData} onCityClick={handleCityClick} />
+        <section className="flex flex-col w-full"> {/* 모바일 화면을 고려한 패딩 추가 */}
+            <section>
+                <nav className="flex items-center justify-between text-lg bg-indigo-800 p-4 shadow-lg rounded-md w-full">
+                    <span id="category" className="text-white font-semibold">Category</span>
+                </nav>
+
+                <div className="flex flex-col items-center justify-center flex-1">
+                    {/* Flex container for centering */}
+                    <div
+                        ref={firstRef}
+                        className="flex flex-col justify-center items-center bg-white p-6 opacity-0 translate-y-4 transition-all duration-700 ease-out mt-8"
+                    >
+                        <span className="text-2xl  font-sans font-semibold border-4 rounded-full p-3 text-center tracking-wide">
+                            지역과 카테고리를 선택하고 키워드를 입력하세요
+                        </span>
+                    </div>
                 </div>
-                <div className="flex flex-col">
-                    <CheckBoxArea mapData={mapData} onCityClick={handleCityClick} selectedCities={selectedCities} />
+
+                <section className="flex flex-col md:flex-row justify-center items-start mt-8 mx-auto gap-8 max-w-7xl w-full">
+                    {/* 첫 번째 div - 지도 영역 */}
+                    <div className="flex flex-col flex-1 min-w-0 w-full md:w-auto">
+                        <Map heatmapData={mapData} onCityClick={handleCityClick} />
+                    </div>
+
+                    {/* 두 번째 div - 체크박스와 프롬프트 영역 */}
+                    <div className="flex flex-col items-center bg-white flex-1 min-w-0 w-full md:w-auto">
+                        <CheckBoxArea />
+                        <div className="mt-8 w-full"> {/* 프롬프트와 체크박스 사이에 margin-top 추가 */}
+                            <Prompt />
+                        </div>
+
+                    </div>
+                </section>
+            </section>
+
+            {/* 드롭박스 영역 위에 nav 추가 */}
+            <nav id="dropbox" className="flex items-center justify-between text-lg bg-indigo-800 p-4 shadow-lg rounded-md mt-8">
+                <span className="text-white font-semibold">Drop Box Area</span>
+            </nav>
+
+            {/* 드래그 앤 드롭 박스 영역 */}
+            <section className="flex flex-col md:flex-row justify-center items-center md:items-start mb-10 mx-auto max-w-7xl gap-8 w-full">
+                {/* 왼쪽 사용방법 안내 텍스트 */}
+                <div className="flex justify-center items-center flex-1 w-full md:min-h-[400px] min-h-[300px]">
+                    <div
+                        ref={secondRef}
+                        className="flex flex-col justify-center items-center bg-indigo-100 p-8 rounded-lg shadow-md w-[270px] h-[170px] md:w-[380px] md:h-[220px] opacity-0 translate-y-10 transition-all duration-700 ease-out"
+                    >
+                        <p className="text-base md:text-lg font-sans font-semibold text-gray-800 mb-2 text-center tracking-wide">
+                            사진을 업로드하거나
+                        </p>
+                        <p className="text-base md:text-lg font-sans font-semibold text-gray-800 text-center tracking-wide">
+                            드래그 앤 드롭으로 추가하세요
+                        </p>
+
+                    </div>
+                </div>
+
+                {/* 오른쪽 드래그 앤 드롭과 프롬프트 */}
+                <div className="w-full max-w-sm sm:max-w-md md:max-w-md ">
                     <DragAndDropArea
+                        imageFile={imageFile}
                         uploadedImage={uploadedImage}
                         handleDrop={handleDrop}
                         handleFileChange={handleFileChange}
                         handleCheckboxGroupChange={handleCheckboxGroupChange}
                         buttonVisible={buttonVisible}
                         isImageUploaded={isImageUploaded}
-                        handleButtonClick={handleButtonClick}
                         handleHowButtonClick={handleHowButtonClick}
                         modalIsOpen={modalIsOpen}
                     />
-                    <ImageCropper
-                        cropData={cropData}
-                        getCropData={getCropData}
-                        cropperRef={cropperRef}
-                        image={image}
-                    />
+
                 </div>
-
-                {/* 
-                    <div id="drag-drop-area" className="text-center flex flex-row justify-center ml-24 mt-20" onDrop={handleDrop}>
-                        <label htmlFor="file-upload" className="mt-10 cursor-pointer">
-                            <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
-                            {uploadedImage ? <img className="uploadImg w-72 h-60 flex rounded-md border-dashed border-2 border-gray-500 p-2" src={uploadedImage.src} alt="upload" /> : <img className="uploadImg w-72 h-60 flex rounded-md border-dashed border-2 border-gray-500 p-2" src={NOTUPLOAD[0].image} alt="noUpload" />}
-                        </label>
-
-                        <div id="uploaded-image-container" className="min-w-72 min-h-72 flex flex-col p-2 ml-10 justify-center items-left">
-                            <div className="text-left mb-3 text-4xl font-Pretendard">
-                                Drop Box  <br /> Area
-                            </div>
-
-                            {buttonVisible &&
-                                <button
-                                    className={`${isImageUploaded ? "bg-indigo-700" : "bg-gray-600"} w-28 h-10 text-center mt-2 mb-2 rounded-md inline text-xs text-white font-Pretendard`}
-                                    onClick={isImageUploaded ? () => { handleButtonClick(); } : null}>
-                                    Ai Search
-                                </button>
-                            }
-
-                            {!buttonVisible && !modalIsOpen &&
-                                <ModalExample />
-                            }
-                            <button className="w-28 h-10 text-center bg-indigo-700 inline-block rounded-md px-2 py-2 text-xs text-white font-Pretendard" onClick={() => handleHowButtonClick()}>How to use</button>
-                        </div>
-                    </div > */}
-
-                {/* <div className='flex flex-row justify-center items-center ml-14 mt-20 gap-20'>
-
-                        <div className="text-right border-dashed border-2 border-gray-500 rounded-md">
-                            <div className="flex flex-col items-center">
-                                <div className="border">
-                                    {cropData ? (cropData && <img className=" mr-2 ml-2 mt-2 mb-2 w-72 h-60" src={cropData} alt=" " />) : (<img className="mr-2 ml-2 mt-2 mb-2 w-72 h-60" src="./img/no_image.png" />)}
-                                </div>
-                                <br />
-                                <p className="text-md font-Pretendard text-semibold">Cropped Image</p>
-                                <br />
-                            </div>
-                        </div>
-                        <div className="flex flex-col ml-10">
-                            <Cropper
-                                ref={cropperRef}
-                                className='w-96 h-96'
-                                style={{ height: "20em", width: "20em" }}
-                                zoomTo={0.2}
-                                initialAspectRatio={1}
-                                preview=".img-preview"
-                                src={image}
-                                viewMode={1}
-                                minCropBoxHeight={10}
-                                minCropBoxWidth={10}
-                                background={false}
-                                responsive={true}
-                                autoCropArea={1}
-                                checkOrientation={false}
-                                guides={true}
-                            />
-                            <button className="mt-3 w-28 h-10 bg-indigo-700 rounded-md px-2 py-2 text-xs text-white font-Pretendard" onClick={getCropData}>
-                                Crop
-                            </button>
-                        </div>
-                    </div> */}
             </section>
         </section>
     );
+
 }
