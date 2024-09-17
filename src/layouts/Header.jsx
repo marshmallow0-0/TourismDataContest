@@ -6,27 +6,28 @@
 //TODO 
 //css 통일 후에 Home, How to use, Who we are, myProfile을 배열로 저장하여 map으로 반복 줄이기 
 
-import { Link } from "react-router-dom"
+import { Form, Link, useRouteLoaderData } from "react-router-dom"
 
 const Header = () => {
+    const token = useRouteLoaderData('root');
     return (
-        <nav id='navbar' className="fixed top-0 left-0 right-0 flex max-w-full bg-white p-3 z-10 shadow">
-            <div className="w-full  flex  justify-center items-center ">
+        <nav id='navbar' className="fixed top-0 left-0 right-0 flex max-w-full bg-white p-3 z-10">
+            <div className="w-full  flex  justify-start items-center ">
                 <div className="flex w-1/4  font-bold">
                     <Link className="nav-link" to="/">
-                        <div className="flex  mt-2 text-xl  text-blue-500">
+                        {/* <div className="flex  mt-2 text-xl  text-blue-500">
                             <img className="w-10 h-10" src={`${process.env.PUBLIC_URL}/img/logo.png`} alt="Logo" />
                             RIA
-                        </div>
+                        </div> */}
                     </Link>
                 </div>
                 <div className="flex">
-                    <Link className="nav-link" to="/" >
+                    {/* <Link className="nav-link" to="/" >
                         <button className="font-Pretendard  bg-transparent font-medium transition duration-500 ease-in-out hover:overline-underline hover:text-underline-offset  hover:bg-gray-500 hover:text-white rounded-md p-2">
                             Home
                         </button>
-                    </Link>
-                    <Link className="nav-link" to="/how">
+                    </Link> */}
+                    {/* <Link className="nav-link" to="/how">
                         <button className="font-Pretendard  bg-transparent font-medium transition duration-500 ease-in-out hover:overline-underline hover:text-underline-offset  hover:bg-gray-500 hover:text-white rounded-md p-2">
                             How to use
                         </button>
@@ -36,17 +37,32 @@ const Header = () => {
                         <button className=" font-Pretendard  bg-transparent font-medium transition duration-500 ease-in-out hover:overline-underline hover:text-underline-offset  hover:bg-gray-500 hover:text-white rounded-md p-2" >
                             Who we are
                         </button>
-                    </Link>
-                    {/* <Link className="nav-link" to="/myProfile">
-                        <button className="border  border-white rounded-md hover:border-gray-50 text-blue-500 hover:bg-gray-200 py-2 px-4 text-base mx-2 font-Pretendard font-medium leading-tight relative p-2">
-                            myProfile
+                    </Link> */}
+                    {/* <Link className="nav-link" to="/support">
+                        <button className="border  border-white rounded-md hover:border-gray-50  hover:bg-gray-200 py-2 px-4 text-base mx-2 font-Pretendard font-medium leading-tight relative p-2 transition duration-500 ease-in-out">
+                            support
                         </button>
                     </Link> */}
-                    {/* <Link className="nav-link" to="/login">
-                        <button type="button" className="ml-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none  focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-lg inline-flex items-center">
-                            LogIn
-                        </button>
-                    </Link> */}
+                    {/* {token &&
+                        <Link className="nav-link" to="/myProfile">
+                            <button className="border  border-white rounded-md hover:border-gray-50 text-blue-500 hover:bg-gray-200 py-2 px-4 text-base mx-2 font-Pretendard font-medium leading-tight relative p-2 transition duration-500 ease-in-out">
+                                myProfile
+                            </button>
+                        </Link>
+                    }
+                    {!token &&
+                        <Link className="nav-link" to="/auth">
+                            <button type="button" className="ml-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none  focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-lg inline-flex items-center">
+                                LogIn
+                            </button>
+                        </Link>
+                    }
+                    {token &&
+                        <Form action='/logout' method='post'>
+                            <button className="ml-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none  focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center shadow-lg inline-flex items-center">Logout</button>
+                        </Form>
+                    } */}
+
                 </div>
             </div>
         </nav >
