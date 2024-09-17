@@ -1,11 +1,16 @@
 import { Suspense, lazy } from "react";
-import SearchFailPage from "../pages/SearchFailPage";
+import SearchFailPage from "../pages/SearchPage/SearchFailPage.jsx";
 import LicensePage from "../pages/LicensePage";
-import Login from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage.jsx";
-import Redirection from "../pages/Redirection.jsx";
+import Redirection from "../pages/dev/Redirection.jsx";
 import SupportPage from "../pages/SupportPage/SupportPage.jsx";
 import SupportFAQPage from "../pages/SupportPage/SupportFAQPage.jsx";
+import MyTravelRecordsForm from "../pages/TravelPage/TravelPage.jsx";
+import RootLayout from "../layouts/RootLayout.js";
+import { checkAuthLoader, tokenLoader } from "../util/auth.js";
+
+import AuthenticationPage, { action } from "../pages/SignUpPage/Authentication.js";
+import { logoutAction } from "../pages/Logout.js";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -13,15 +18,15 @@ const { createBrowserRouter } = require("react-router-dom");
 //현재 로딩화면이 div Loading 으로 단순 구성되어있으므로 수정화면을 별도로 만들어야 한다
 const Loading = <div>Loading....</div>; // Loading을 JSX 요소로 정의
 const Main = lazy(() => import("../pages/MainPage/MainPage.jsx"));
-const How = lazy(() => import("../pages/HowToUsePage"));
-const Who = lazy(() => import("../pages/WhoWeArePage"));
 const MyProfile = lazy(() => import("../pages/MyProfilePage/MyProfilePage.jsx"));
 const Search = lazy(() => import("../pages/SearchPage/SearchPage.jsx"));
 
 const root = createBrowserRouter([
     {
         path: "/",
-        //element: <Suspense fallback={Loading}></Suspense>, // Loading 변수를 직접/ 전달/
+        element: <RootLayout />,
+        id: 'root',
+        loader: tokenLoader,
         children: [
             {
                 index: true,
@@ -30,14 +35,6 @@ const root = createBrowserRouter([
             {
                 path: "search",
                 element: <Suspense fallback={Loading}><Search /></Suspense>
-            },
-            {
-                path: "how",
-                element: <How />
-            },
-            {
-                path: "who",
-                element: <Suspense fallback={Loading}><Who /></Suspense>
             },
             {
                 path: "fail",
@@ -49,11 +46,22 @@ const root = createBrowserRouter([
             },
             {
                 path: "myprofile",
-                element: <Suspense fallback={Loading}><MyProfile /></Suspense>
+                element: <Suspense fallback={Loading}><MyProfile /></Suspense>,
+                // WARNING 해제해야함
+                loader: checkAuthLoader 
+            },
+            // {
+            //     path: "login",
+            //     element: <Suspense fallback={Loading}><Login /></Suspense>
+            // },
+            {
+                path: 'auth',
+                element: <AuthenticationPage />,
+                action: action,
             },
             {
-                path: "login",
-                element: <Suspense fallback={Loading}><Login /></Suspense>
+                path: 'logout',
+                action: logoutAction,
             },
             {
                 path: "kakao/callback",
@@ -71,6 +79,12 @@ const root = createBrowserRouter([
                 path: "support/faq",
                 element: <Suspense fallback={Loading}><SupportFAQPage /></Suspense>
             },
+            {
+                path: "travelrecord",
+                element: <Suspense fallback={Loading}><MyTravelRecordsForm /></Suspense>,
+                loader: checkAuthLoader
+
+            }
         ],
     },
 ]);
