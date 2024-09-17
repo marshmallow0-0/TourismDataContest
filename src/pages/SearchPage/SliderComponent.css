@@ -1,0 +1,33 @@
+.slick-slide {
+    transition: transform 0.3s ease;
+    margin: 0;
+    /* 슬라이드 간의 겹침 효과 */
+}
+
+.slider-image-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    transition: transform 0.3s ease;
+}
+
+.slider-image-wrapper:hover {
+    z-index: 10;
+    /* Hover 시 이미지를 위로 올림 */
+}
+
+.slider-image-wrapper:hover .slider-image {
+    transform: scaleX(1.2);
+    /* Hover 시 좌우로 확대 */
+}
+
+.slider-image-wrapper:not(:hover) .slider-image {
+    transform: scaleX(0.8);
+    /* Hover되지 않은 이미지 좌우로 축소 */
+}
+
+.slider-image {
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}

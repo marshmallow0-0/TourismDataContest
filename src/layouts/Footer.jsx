@@ -5,8 +5,8 @@ const Footer = () => {
             <div className=" w-full max-w-screen-xl mx-auto md:py-2">
                 <div className="sm:flex sm:items-center sm:justify-between">
 
-                    <div className="self-center text-2xl font-semibold whitespace-nowrap text-gray-400 leading-none">2JMU<br />
-                        <span className="text-xs leading-none">Incheon University<br />Computer science, 2JMU</span>
+                    <div className="self-center text-2xl font-semibold whitespace-nowrap text-gray-400 leading-none">TravelNuri<br />
+                        <span className="text-xs leading-none">University<br />Computer science</span>
                     </div>
                     <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
                         <li>
@@ -24,7 +24,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="/" className="hover:underline">2JMU™</a></span>
+                <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="/" className="hover:underline">TravelNuri™</a></span>
             </div>
         </div>
     )

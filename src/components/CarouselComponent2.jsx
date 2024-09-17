@@ -4,10 +4,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled from "styled-components";
 
-// React Icons 불러오기
-import { FcRating } from "react-icons/fc";
-import { CiStar } from "react-icons/ci";
-import { FaSearch, FaHeart, FaStar } from "react-icons/fa";
 const StyledSlider = styled(Slider)`
   .slick-list {
     margin: 0 auto;
@@ -15,9 +11,6 @@ const StyledSlider = styled(Slider)`
   }
 
   .slick-dots {
-    position: relative;
-    bottom: -70px;
-    
     li button:before {
       color: gray;
     }
@@ -62,10 +55,25 @@ const SlideTitle = styled.h2`
 
 const SlideSubtitle = styled.p`
   margin: 5px 0 0;
-  color: black;
+   color: black;
 `;
 
 const SlideLocation = styled.p`
+  margin: 5px 0 0;
+   color: black;
+`;
+
+const SlideAddress = styled.p`
+  margin: 5px 0 0;
+  color: black;
+`;
+
+const SlideHours = styled.p`
+  margin: 5px 0 0;
+  color: black;
+`;
+
+const SlidePhone = styled.p`
   margin: 5px 0 0;
   color: black;
 `;
@@ -84,11 +92,14 @@ const Icon = styled.span`
   align-items: center;
   justify-content: center;
   background: white;
+  background-opacity: 0.75;
   padding: 0.5rem;
-  border-radius: 100%;
-  font-size: 1.5rem;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
   font-weight: bold;
   color: black;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -102,6 +113,9 @@ const slides = [
     title: "여행지 추천",
     subtitle: "가족과 함께 즐거운 시간을 보내세요",
     location: "서울특별시 강남구",
+    address: "서울특별시 강남구 강남대로 123",
+    hours: "09:00 - 18:00",
+    phone: "02-123-4567",
     zoom: 1,
     like: 2,
     bookmark: 3
@@ -111,6 +125,9 @@ const slides = [
     title: "조용한 휴식의 도시 강릉",
     subtitle: "네디슨 칼릴로 함께 즐길 수 있는 강릉",
     location: "강원 강릉시 강릉대로 33",
+    address: "강원도 강릉시 강릉대로 33",
+    hours: "10:00 - 20:00",
+    phone: "033-123-4567",
     zoom: 4,
     like: 5,
     bookmark: 6
@@ -120,47 +137,75 @@ const slides = [
     title: "별이 빛나는 밤에",
     subtitle: "아름다운 별빛을 감상하세요",
     location: "경기도 양평군",
+    address: "경기도 양평군 양평대로 123",
+    hours: "08:00 - 22:00",
+    phone: "031-123-4567",
     zoom: 7,
     like: 8,
     bookmark: 9
   }
 ];
 
-export default function CarouselComponent() {
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const Button = styled.button`
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+export default function CarouselComponent2() {
   const settings = {
-    slidesToShow: 1,  // 한 번에 몇 개의 슬라이드를 보여줄지 설정
-    slidesToScroll: 1,  // 한 번에 몇 개의 슬라이드를 넘길지 설정
+    slide: "div",
     infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
     speed: 1000,
     draggable: true,
     fade: true,
     dots: true,
     autoplay: true,
     autoplaySpeed: 10000,
-    dotsClass: "slick-dots",
-    arrows: false
+    dotsClass: "slick-dots"
   };
 
   return (
-    <div className="relative mt-20 mb-5 p-5 mx-auto max-w-2xl text-center border-4 border-black rounded-lg">
+    <div className="mt-20 p-10 mx-auto max-w-2xl text-center border-4 border border-gray-400 rounded-lg">
       <StyledSlider {...settings}>
         {slides.map((slide, index) => (
           <div key={index} className="w-full h-full drop-shadow-lg relative">
             <SlideContent>
-
-              <IconContainer>
-                <Icon><FaSearch color="#51abf3" /> {slide.zoom}</Icon>
-                {/* <Icon><FaHeart color="#51abf3" /> {slide.like}</Icon> */}
-                <Icon><FaStar color="#FFFF00" /> {slide.bookmark}</Icon>
-              </IconContainer>
-              <Image src={slide.img} alt="slide" />
-              <SlideLocation>{slide.location}</SlideLocation>
               <SlideTitle>{slide.title}</SlideTitle>
               <SlideSubtitle>{slide.subtitle}</SlideSubtitle>
+              <Image src={slide.img} alt="slide" />
+              <SlideLocation>{slide.location}</SlideLocation>
+              <SlideAddress>{slide.address}</SlideAddress>
+              <SlideHours>{slide.hours}</SlideHours>
+              <SlidePhone>{slide.phone}</SlidePhone>
             </SlideContent>
           </div>
         ))}
       </StyledSlider>
+      <ButtonContainer>
+        <Button onClick={() => alert("Button 1 clicked!")}>인근 카페</Button>
+        <Button onClick={() => alert("Button 2 clicked!")}>인근 음식점</Button>
+        <Button onClick={() => alert("Button 3 clicked!")}>인근 관광지</Button>
+        <Button onClick={() => alert("Button 4 clicked!")}>추천 여행코스</Button>
+      </ButtonContainer>
     </div>
   );
 }
