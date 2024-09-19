@@ -138,14 +138,14 @@ const DragAndDropArea = ({
                                 {/* Ai Search 버튼 */}
                                 <button
                                     className="bg-gray-600 w-24 sm:w-28 h-10 text-center rounded-md text-xs text-white font-Pretendard"
-                                    onClick={handleAiSearchClick}>
+                                    >
                                     검색하기
                                 </button>
 
                                 {/* Crop Image 버튼 */}
                                 <button
                                     className="bg-gray-600 w-24 sm:w-28 h-10 text-center rounded-md text-xs text-white font-Pretendard"
-                                    onClick={handleCropButtonClick}>
+                                    >
                                     이미지 자르기
                                 </button>
                             </div>
