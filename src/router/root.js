@@ -48,7 +48,7 @@ const root = createBrowserRouter([
                 path: "myprofile",
                 element: <Suspense fallback={Loading}><MyProfile /></Suspense>,
                 // WARNING 해제해야함
-                loader: checkAuthLoader 
+                // loader: checkAuthLoader 
             },
             // {
             //     path: "login",
