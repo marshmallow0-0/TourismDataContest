@@ -5,7 +5,8 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 
-const API_BASE_URL = "http://localhost:8000";
+// const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const showErrorAlert = () => {
     Swal.fire({

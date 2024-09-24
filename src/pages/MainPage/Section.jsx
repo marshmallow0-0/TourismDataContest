@@ -179,9 +179,9 @@ function Section({ user }) {
                                             <h3 className="text-lg sm:text-xl font-bold">
                                                 {user.nickname || "Admin"}
                                             </h3>
-                                            <p className="text-white/80 text-xs sm:text-sm">
+                                            {/* <p className="text-white/80 text-xs sm:text-sm">
                                                 Last Login: 25/06/2024 Tue
-                                            </p>
+                                            </p> */}
                                         </div>
                                     </div>
 

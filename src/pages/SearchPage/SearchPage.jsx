@@ -1,149 +1,3 @@
-// import React, { useState } from "react";
-// import BasicLayout from "../../layouts/BasicLayout";
-// import { useNavigate } from "react-router-dom";
-// // import KakaoMap from "../../components/KakaoMap";
-// import KakaoMap from "./KakaoMap";
-// import PublicDataMap from "../../components/PublicDataMap";
-// import ImageGallery from "./ImageGallery";
-// import SearchCarousel from "./SearchCarousel";
-// import Info from "./Info";
-// import { useSelector } from 'react-redux';
-// import { useLocation } from 'react-router-dom';
-// import SearchListButtons from "./SearchListButtons";
-
-// import axios from 'axios';
-
-// const API_BASE_URL = 'http://localhost:8000';  // 백엔드 서버 주소
-
-// export default function SearchPage() {
-//     const navigate = useNavigate();
-//     const location = useLocation();
-//     const { image } = location.state || {};  // 기본값을 설정하여 오류를 방지합니다.
-
-//     const selectedTags = useSelector(state => state.checkbox.checkboxes);
-//     const selectedCities = useSelector(state => state.checkbox.selectedCities);
-//     const uploadedImage = image || "https://via.placeholder.com/300";
-
-//     // 정적 데이터 
-//     const result = [
-//         {
-//             place_name: "Place 1",
-//             url: "https://via.placeholder.com/150",
-//             address_name: "Address 1",
-//             phone: "123-456-7890",
-//             parking: 1,
-//             pet: 1,
-//             baby: 1,
-//             x: 127.0337,
-//             y: 37.4982
-//         },
-//         {
-//             place_name: "Place 2",
-//             url: "https://via.placeholder.com/150",
-//             address_name: "Address 2",
-//             phone: "098-765-4321",
-//             parking: 0,
-//             pet: 1,
-//             baby: 0,
-//             x: 127.0377,
-//             y: 37.5012
-//         },
-//     ];
-
-//     const [category, setCategory] = useState('');
-//     const [selectedResultIndex, setSelectedResultIndex] = useState(0);
-//     const [ButtonSelect, valueChange] = useState(0);
-//     const [LocationAddress, choiceLocation] = useState(`${result[0].place_name}`);
-
-//     const handleCategoryChange = (newCategory) => {
-//         console.log("카테고리 변경됨:", newCategory);
-//         setCategory(newCategory);
-//     };
-
-//     const handleResearchButtonClick = () => {
-//         navigate('/');
-//     };
-
-//     // useEffect(() => {
-//     //     // category가 변경될 때마다 필요한 작업 수행
-//     //     console.log("Category changed:", category);
-//     //     // 필요한 경우 여기서 맵을 다시 로드하거나 다른 동작 수행
-//     // }, [category, selectedResultIndex]);
-
-//     return (
-//         <BasicLayout>
-//             <div className="w-full h-[50vh] px-4 flex justify-center items-center relative">
-//                 <ImageGallery />
-//             </div>
-//             <div className="w-full flex justify-center">
-//                 <div className="mx-auto min-w-40 max-w-5xl">
-//                     <div id="drag-drop-area" className="text-center flex flex-row justify-center gap-10">
-//                         <label htmlFor="file-upload" className="mt-10 cursor-pointer">
-//                             <img className="uploadImg max-w-2xl w-80 h-60 flex rounded-md border-solid border-2 border-gray-400 p-2" src={uploadedImage} alt="upload" />
-//                         </label>
-//                         <div className="max-w-xl border-2 border-gray-400">
-//                             <h2 className="text-2xl font-bold">Check Box Area</h2>
-//                             <div className="flex flex-wrap my-4">
-//                                 {selectedTags.map(tag => (
-//                                     <div key={tag} className="bg-lime-500 text-white px-2 py-1 m-1 rounded flex items-center">
-//                                         {tag}
-//                                     </div>
-//                                 ))}
-//                                 {selectedCities.map(city => (
-//                                     <div key={city} className="bg-indigo-500 text-white px-2 py-1 m-1 rounded flex items-center">
-//                                         {city}
-//                                     </div>
-//                                 ))}
-//                             </div>
-//                         </div>
-//                     </div>
-//                     <div className="flex flex-col mt-10">
-//                         <div className="w-4/5 mx-auto p-4 border border-gray-300 rounded-lg bg-gray-100">
-//                             <div className="bg-gray-100 p-4 rounded-lg mb-4 text-lg max-h-48 overflow-y-auto">
-//                                 <div className="bg-blue-500 p-4 rounded-xl mb-4">
-//                                     <strong className="text-white">울산대공원</strong> <br />
-//                                     <span className="text-white">언제가도 좋은 최고의 공원</span>
-//                                 </div>
-//                                 <div className="bg-white p-4 rounded-lg mb-4">
-//                                     <strong>롯데 꿈동산</strong> <br />
-//                                     <span>언제가도 좋은 최고의 공원</span>
-//                                 </div>
-//                                 <div className="bg-white p-4 rounded-lg mb-4">
-//                                     <strong>어린이 공원</strong> <br />
-//                                     <span>언제가도 좋은 최고의 공원</span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className="mt-10 flex justify-end w-4/5 mx-auto">
-//                             <button
-//                                 className="bg-indigo-700 w-28 h-10 text-center mb-2 rounded-md text-xs text-white font-Pretendard"
-//                                 onClick={() => handleResearchButtonClick()}>
-//                                 재탐색
-//                             </button>
-//                         </div>
-//                     </div>
-
-//                     <SearchCarousel onCategoryChange={handleCategoryChange} />
-
-//                     <div id="Robot_MAP_Area" className="border-4 rounded-md shadow-md mt-8">
-//                         <div id="Ria_Robot" className="flex flex-row mb-10">
-//                             <div className="ml-2 mt-7 mb-1 bg-[url('./img/RiaRobot.png')] bg-auto bg-no-repeat bg-center w-10 h-10"></div>
-//                             <span className="ml-2 mt-9 text-indigo-900 text-2xl font-semibold">RIA Ai가 추천하는 장소 리스트입니다. </span>
-//                         </div>
-
-//                         <Info buttonSelect={ButtonSelect} locationAddress={LocationAddress} />
-
-//                         <div id="kakao_map_loaction" className="ml-2 mb-2 mr-2 mt-2 border-4 flex flex-row font-Pretendard text-indigo-900">
-//                             {<KakaoMap mapx={result[0].x} mapy={result[0].y} category={category} />}
-//                             {/* {category !== 'AT4' && <KakaoMap mapx={result[0].x} mapy={result[0].y} category={category} />} */}
-//                             {/* {category === 'AT4' && <PublicDataMap mapx={result[selectedResultIndex].y} mapy={result[selectedResultIndex].x} category={category} />} */}
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </BasicLayout>
-//     );
-// }
 import React, { useState, useEffect } from "react";
 import BasicLayout from "../../layouts/BasicLayout";
 import { useNavigate } from "react-router-dom";
@@ -157,8 +11,10 @@ import { useLocation } from 'react-router-dom';
 import SearchListButtons from "./SearchListButtons";
 import axios from 'axios';
 import { getDetailPlace } from "../../api/api";
+import Accordion from "./Accordion";
 
-const API_BASE_URL = 'http://localhost:8000';  // 백엔드 서버 주소
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+// 백엔드 서버 주소
 
 export default function SearchPage() {
     const navigate = useNavigate();
@@ -188,6 +44,7 @@ export default function SearchPage() {
     const [LocationAddress, choiceLocation] = useState('');
     //WARNING let -> const
     const [touristPlaces, setTouristPlaces] = useState([]);  // 관광지 정보를 저장할 상태 변수
+    // WARNING const { jsonData, uploadedImage, imageFile } = location.state;
 
     const [detail, setDetail] = useState(null);
     const [error, setError] = useState(null);
@@ -337,83 +194,52 @@ export default function SearchPage() {
                         </div>
                     </>
                 ) : (
-                    <div>No data found. Please try again.</div>
+                    <div>데이터 찾을 수 없음 </div>
                 )}
             </div>
-
-            <div className="w-full h-[50vh] px-4 flex justify-center items-center relative">
+            {/* 
+            <div className="w-full h-[50vh] md:h-[70vh] px-2 md:px-4 flex justify-center items-center relative">
                 <ImageGallery />
-            </div>
+            </div> */}
+
             <div className="w-full flex justify-center">
-                <div className="mx-auto min-w-40 max-w-5xl">
-                    <div id="drag-drop-area" className="text-center flex flex-row justify-center gap-10">
-                        <label htmlFor="file-upload" className="mt-10 cursor-pointer">
+                <div className="h-32"></div>
+
+                <div className="mx-auto max-w-5xl w-full sm:w-4/5">
+                    <div id="drag-drop-area" className="text-center flex flex-col sm:flex-row justify-center items-center">
+                        <label htmlFor="file-upload" className="mt-4 sm:mt-10">
                             <img
-                                className="uploadImg max-w-2xl w-96 h-72 flex rounded-md border-solid border-2 border-gray-400 p-4"
-                                src={uploadedImage}
+                                className="uploadImg min-w-96 sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-md p-4 mt-2"
+                                src={'https://cdn.pixabay.com/photo/2024/08/29/10/01/nature-9006428_640.jpg'}
+
+                                //src={uploadedImage}
                                 alt="upload"
                             />
                         </label>
-                        <div className="max-w-2xl">
-                            <div className="my-6">
-                                {/* 카테고리 */}
-                                <h1 className="w-full text-left font-semibold text-lg mb-2">카테고리</h1>
-                                <div className="grid grid-cols-3 gap-4 w-full">
-                                    {selectedTags.map((tag) => (
-                                        <div key={tag} className="bg-lime-500 text-white px-4 py-2 rounded-md flex items-center text-lg">
-                                            {tag}
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* 지역 */}
-                                <h1 className="w-full mt-6 text-left font-semibold text-lg mb-2">지역</h1>
-                                <div className="grid grid-cols-3 gap-4 w-full">
-                                    {selectedCities.map((city) => (
-                                        <div key={city} className="bg-indigo-500 text-white px-4 py-2 rounded-md flex items-center text-lg">
-                                            {city}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
-                    <div className="flex flex-col mt-10">
-                        {/* <div className="w-4/5 mx-auto p-4 border border-gray-300 rounded-lg bg-gray-100">
-                            <div className="bg-gray-100 p-4 rounded-lg mb-4 text-lg max-h-48 overflow-y-auto">
-                                {touristPlaces.map((place, index) => (
-                                    <div key={index} className="bg-white p-4 rounded-lg mb-4">
-                                        <strong>{place.name}</strong> <br />
-                                        <span>{place.address}</span> <br />
-                                        <span>{place.telephone}</span> <br />
-                                        <span>
-                                            주차: {place.parking !== "정보 없음" ? place.parking : '정보 없음'},
-                                            반려동물: {place.pets_available === '가능' ? '허용' : '불허'},
-                                            결제: {place.credit_card === '가능' ? '가능' : '불가능'}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div> */}
-                        <div className="mt-10 flex justify-end w-4/5 mx-auto">
+                    {/* 카테고리 */}
+                    <Accordion selectedTags={selectedTags} selectedCities={selectedCities} />
+
+                    <div className="flex flex-col mt-6 sm:mt-10">
+                        <div className="mt-10 flex justify-center sm:justify-end mx-auto">
                             <button
-                                className="bg-indigo-700 w-28 h-10 text-center mb-2 rounded-md text-xs text-white font-Pretendard"
+                                className="w-full sm:w-40 h-12 font-semibold text-lg mb-4 cursor-pointer hover:bg-gray-600 bg-gray-500 text-center text-white px-6 py-3 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105"
                                 onClick={() => handleResearchButtonClick()}>
-                                재탐색
+                                홈으로
                             </button>
                         </div>
                     </div>
-                    
+
                     <div>
                         {touristPlaces && touristPlaces.length > 0 ? (
                             <SearchCarousel onCategoryChange={handleCategoryChange} touristPlaces={touristPlaces} />
                         ) : (
-                            <p>Loading or no tourist places found...</p> // 데이터가 없을 때 적절한 메시지
+                            <p>Loading or no tourist places found...</p>
                         )}
                     </div>
 
-                    <div id="Robot_MAP_Area" className="border-4 rounded-md shadow-md mt-8">
+                    <div id="Robot_MAP_Area" className="w-full mx-auto sm:w-[700px] border-4 rounded-md shadow-md mt-8"> {/* 반응형 크기 설정 */}
                         <div id="Ria_Robot" className="flex flex-row mb-10">
                             <div className="ml-2 mt-7 mb-1 bg-[url('./img/RiaRobot.png')] bg-auto bg-no-repeat bg-center w-10 h-10"></div>
                             <span className="ml-2 mt-9 text-indigo-900 text-2xl font-semibold">
@@ -423,16 +249,14 @@ export default function SearchPage() {
 
                         <Info buttonSelect={ButtonSelect} locationAddress={LocationAddress} />
 
-                        <div id="kakao_map_loaction" className="ml-2 mb-2 mr-2 mt-2 border-4 flex flex-row font-Pretendard text-indigo-900">
-                            <div style={{ width: '100%', height: '400px' }}>
+                        <div id="kakao_map_location" className="ml-2 mb-2 mr-2 mt-2 border-4 flex flex-col sm:flex-row font-Pretendard text-indigo-900">
+                            <div className="w-full sm:w-[700px] h-[300px] sm:h-[400px]">  {/* 반응형 크기 설정 */}
                                 {touristPlaces.length > 0 && (
                                     <KakaoMap mapx={touristPlaces[0].x} mapy={touristPlaces[0].y} category={category} />
-                                )}                                {/* {category === 'AT4' && <PublicDataMap mapx={result[selectedResultIndex].y} mapy={result[selectedResultIndex].x} category={category} />} */}
-
+                                )}
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </BasicLayout>

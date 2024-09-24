@@ -5,7 +5,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Styled components for the Slider and Slide items
 const StyledSlider = styled(Slider)`
   .slick-list {
     margin: 0 auto;
@@ -23,12 +22,18 @@ const StyledSlider = styled(Slider)`
       color: black;
     }
   }
+
+  @media (max-width: 768px) { /* 화면 크기가 768px 이하일 때 적용 */
+    .slick-dots {
+      bottom: -17em; /* 모바일에서 bottom 값 조정 */
+    }
+  }
 `;
 
 const SlideContent = styled.div`
-  display: flex; /* Flex layout to align image and text side by side */
-  justify-content: space-between; /* Space between the image and text */
-  align-items: center; /* Vertically align the content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   height: 100%;
   text-align: left;
@@ -36,27 +41,41 @@ const SlideContent = styled.div`
   border-radius: 12px;
   padding: 20px;
   overflow: hidden;
-`;
 
+`;
 const ImageContainer = styled.div`
   flex: 1;
   padding: 10px;
+  
+  @media (max-width: 768px) { /* 모바일에서 이미지 크기 조정 */
+    padding: 0;
+    max-width: 200px;
+  }
 `;
 
 const Image = styled.img`
-  width: 100%; /* 이미지를 부모 요소의 100% 크기로 맞춤 */
-  height: auto; /* 가로 세로 비율을 유지하며 높이를 자동으로 설정 */
-  max-width: 300px; /* 이미지의 최대 너비를 제한 */
-  max-height: 200px; /* 이미지의 최대 높이를 제한 */
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  max-height: 200px;
   border-radius: 8px;
-`;
 
+  @media (max-width: 768px) { /* 모바일 화면에서는 이미지 크기 줄이기 */
+    max-width: 200px;
+    max-height: 200px;
+  }
+`;
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
   padding: 10px;
+
+  @media (max-width: 768px) { /* 모바일 화면에서 텍스트 중간 정렬 */
+    text-align: center;
+    padding: 0;
+  }
 `;
 
 const SlideTitle = styled.h2`
@@ -123,9 +142,13 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
   border-top: 3px solid gray;
   width: 100%;
+
+  @media (max-width: 768px) { /* 모바일 화면에서는 버튼 크기 줄이기 */
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
 `;
-
-
 
 const Button = styled.button`
   background-color: white;
@@ -136,10 +159,10 @@ const Button = styled.button`
   font-size: 1rem;
   transition: background-color 0.3s ease;
   flex: 1;
-  display: flex; /* Add flex to align icon and text */
-  align-items: center; /* Vertically center the content */
-  justify-content: center; /* Horizontally center the content */
-  gap: 8px; /* Add space between the icon and text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   &:hover {
     background-color: #dcdcdc;
@@ -147,6 +170,13 @@ const Button = styled.button`
 
   &:last-child {
     border-right: none;
+  }
+
+  @media (max-width: 768px) { /* 모바일에서 버튼의 패딩과 폰트 크기 조정 */
+    padding: 10px;
+    font-size: 0.9rem;
+    border-right: none;
+    width: 100%;
   }
 `;
 // Slide data
@@ -208,7 +238,7 @@ export default function SearchCarousel({ onCategoryChange, touristPlaces }) {
 
   console.log("tourist", touristPlaces);
   return (
-    <div className="mt-20 mb-10 p-5 mx-auto max-w-2xl text-center border-4 border-gray-400">
+    <div className="mt-20 mb-20 p-5 mx-auto max-w-2xl text-center border-4 border-gray-400">
       <StyledSlider {...settings}>
         {touristPlaces.map((place, index) => (
           <div key={index} className="w-full h-full relative">
