@@ -12,7 +12,9 @@ import SearchListButtons from "./SearchListButtons";
 import axios from 'axios';
 import { getDetailPlace } from "../../api/api";
 import Accordion from "./Accordion";
-const API_BASE_URL = 'http://localhost:8000';  // 백엔드 서버 주소
+
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+// 백엔드 서버 주소
 
 export default function SearchPage() {
     const navigate = useNavigate();
@@ -42,6 +44,7 @@ export default function SearchPage() {
     const [LocationAddress, choiceLocation] = useState('');
     //WARNING let -> const
     const [touristPlaces, setTouristPlaces] = useState([]);  // 관광지 정보를 저장할 상태 변수
+    // WARNING const { jsonData, uploadedImage, imageFile } = location.state;
 
     const [detail, setDetail] = useState(null);
     const [error, setError] = useState(null);
@@ -194,18 +197,22 @@ export default function SearchPage() {
                     <div>데이터 찾을 수 없음 </div>
                 )}
             </div>
-
-            <div className="w-full h-[50vh] px-4 flex justify-center items-center relative">
+            {/* 
+            <div className="w-full h-[50vh] md:h-[70vh] px-2 md:px-4 flex justify-center items-center relative">
                 <ImageGallery />
-            </div>
+            </div> */}
 
             <div className="w-full flex justify-center">
+                <div className="h-32"></div>
+
                 <div className="mx-auto max-w-5xl w-full sm:w-4/5">
                     <div id="drag-drop-area" className="text-center flex flex-col sm:flex-row justify-center items-center">
                         <label htmlFor="file-upload" className="mt-4 sm:mt-10">
                             <img
-                                className="uploadImg min-w-96 sm:max-w-sm md:max-w-lg lg:max-w-2xl  rounded-md p-4 mt-2"
-                                src={"https://via.placeholder.com/150"}
+                                className="uploadImg min-w-96 sm:max-w-md md:max-w-xl lg:max-w-4xl xl:max-w-5xl rounded-md p-4 mt-2"
+                                src={'https://cdn.pixabay.com/photo/2024/08/29/10/01/nature-9006428_640.jpg'}
+
+                                //src={uploadedImage}
                                 alt="upload"
                             />
                         </label>
@@ -232,7 +239,7 @@ export default function SearchPage() {
                         )}
                     </div>
 
-                    <div id="Robot_MAP_Area" className="border-4 rounded-md shadow-md mt-8">
+                    <div id="Robot_MAP_Area" className="w-full mx-auto sm:w-[700px] border-4 rounded-md shadow-md mt-8"> {/* 반응형 크기 설정 */}
                         <div id="Ria_Robot" className="flex flex-row mb-10">
                             <div className="ml-2 mt-7 mb-1 bg-[url('./img/RiaRobot.png')] bg-auto bg-no-repeat bg-center w-10 h-10"></div>
                             <span className="ml-2 mt-9 text-indigo-900 text-2xl font-semibold">
@@ -243,7 +250,7 @@ export default function SearchPage() {
                         <Info buttonSelect={ButtonSelect} locationAddress={LocationAddress} />
 
                         <div id="kakao_map_location" className="ml-2 mb-2 mr-2 mt-2 border-4 flex flex-col sm:flex-row font-Pretendard text-indigo-900">
-                            <div style={{ width: '600px', height: '400px' }}>
+                            <div className="w-full sm:w-[700px] h-[300px] sm:h-[400px]">  {/* 반응형 크기 설정 */}
                                 {touristPlaces.length > 0 && (
                                     <KakaoMap mapx={touristPlaces[0].x} mapy={touristPlaces[0].y} category={category} />
                                 )}

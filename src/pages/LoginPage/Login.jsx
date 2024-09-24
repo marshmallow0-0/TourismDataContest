@@ -4,17 +4,17 @@ import MainPage from '../MainPage/MainPage';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 사용
 import { FaHome } from "react-icons/fa";
+import { loginActions } from '../../store/loginSlice';
+import { useDispatch } from 'react-redux';
 
-const API_BASE_URL = "http://localhost:8000";
+// const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 const LoginPage = () => {
     const navigate = useNavigate(); // useNavigate 훅 사용
+    const dispatch = useDispatch();  // Redux 액션을 디스패치하기 위한 훅
 
     const data = useActionData();
-    const navigation = useNavigation();
-    const [searchParams] = useSearchParams();
-    const isLogin = searchParams.get('mode') === 'login';
-    const isSubmitting = navigation.state === 'submitting';
-    const [User, setUser] = useState(null); // 로그인 성공 시 사용자 정보를 저장하는 상태
 
     const [Email, setEmail] = useState("");
     const [Password, setPassword] = useState("");
@@ -24,12 +24,12 @@ const LoginPage = () => {
     // const [userInfo, setUserInfo] = useState(null);  // 사용자 정보 관리
 
     // 로그인 상태 확인 (쿠키에 저장된 토큰을 확인)
-    useEffect(() => {
-        const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-        if (token) {
-            setIsLoggedIn(true);
-        }
-    }, []);
+    // useEffect(() => {
+    //     const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+    //     if (token) {
+    //         setIsLoggedIn(true);
+    //     }
+    // }, []);
 
 
     const location = useLocation();
@@ -75,14 +75,18 @@ const LoginPage = () => {
             });
 
             // 로그인 성공 시 처리
-            const token = response.data;  // 서버에서 받은 토큰
-            localStorage.setItem('token', token);  // 토큰을 로컬 스토리지에 저장
+            // const token = response.data;  // 서버에서 받은 토큰
+            // localStorage.setItem('token', token);  // 토큰을 로컬 스토리지에 저장
 
+            dispatch(loginActions.login(response.data.user));  // 사용자 정보를 Redux에 저장
+
+            setIsLoggedIn(true);  // 로그인 상태 변경
             console.log('로그인 성공', response.data);
-            navigate('/');  // 로그인 성공 후 메인 페이지로 이동
+            // 로그인 성공 후 사용자 정보를 메인 페이지로 넘기면서 이동
+            navigate('/', { state: { user: response.data.user } });
 
         } catch (error) {
-            console.error('Login Failed', error.response.data);
+            console.error('로그인 실패', error);
             setError("이메일 또는 비밀번호가 잘못되었습니다.");
         }
     }
@@ -90,7 +94,8 @@ const LoginPage = () => {
     const handleKakaoLogin = (event) => {
         try {
             event.preventDefault();
-            window.location.href = 'http://localhost:8000/user/auth/kakao';  // 카카오 로그인 페이지로 리다이렉트
+            // window.location.href = 'http://localhost:8000/user/auth/kakao';  // 카카오 로그인 페이지로 리다이렉트
+            window.location.href = `https://${API_BASE_URL}/user/auth/kakao`;  // 카카오 로그인 페이지로 리다이렉트
         } catch (error) {
             console.error("카카오 로그인 실패:", error);
         }
