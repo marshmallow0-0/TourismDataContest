@@ -279,15 +279,14 @@ const KakaoMap = ({ mapx, mapy, category }) => {
                         `<div class="info" style="width: 286px;height: 120px; border-radius:15px; box-shadow:0px 1px 2px #888 border-bottom:2px solid #ccc; border-right:1px solid #ccc;overflow: hidden; background: #fff;">` +
                         `<div class="title" style="padding: 5px 0 0 10px; height:30px; background: rgba(254, 81, 106, 0.5); font-size:18px border-bottom:1px solid #ddd; font-weight: bold;">` +
                         `<a class="titlea" href="${place.place_url}" style="color: blue; ">` +
-                        ` ${place.place_name}<br>` +
+                        `⛱️  ${place.place_name}<br>` +
                         `</a>` +
                         `<div class="close" style="position: absolute; top:4px; right:10px; color: #888; width:17px; height:17;">X</div>` +
                         `</div>
                             <div class="body" style="position: relative; overflow:hidden">
                             <div class="img" style="position: absolute; top: 13px; left: 5px; width: 73px; height: 60px; border-radius: 15px; border: 1px solid #ddd; color: #888; overflow: hidden;">
-                            <img src="./img/food_icon.png" style="height: 60px; width: 73px;">
+                            <img src="./img/tour_icon.png" style="height: 60px; width: 73px;">                            
                             </div>
-
                                 <div class="desc" style="position: relative; margin: 13px 0 0 90px; height: 75px;font-size: 12px; overflow:hidden; text-overflow: ellipsis; ">
                                     ${place.road_address_name ?
                             `<span title="${place.road_address_name}" style="">도로명 : ${place.road_address_name}<br> </span>`
@@ -350,7 +349,7 @@ const KakaoMap = ({ mapx, mapy, category }) => {
         }
     }, [mapx, mapy, category]);
 
-    return <div id="map" style={{ width: '50rem', height: '24rem' }}></div>;
+    return <div id="map" style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default KakaoMap;
