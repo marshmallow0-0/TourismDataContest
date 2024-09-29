@@ -23,7 +23,14 @@ export default function Random() {
             try {
                 const data = await getRandomPlaces();
                 console.log("random image", data);
-                setPlaces(data); // API로 받은 데이터로 places 업데이트
+
+                // 데이터가 배열인지 확인
+                if (Array.isArray(data)) {
+                    setPlaces(data); // API로 받은 데이터로 places 업데이트
+                } else {
+                    throw new Error('데이터 형식이 잘못되었습니다.');
+                }
+
                 setLoading(false); // 로딩 완료
             } catch (err) {
                 setError('장소 데이터를 불러오는 중 오류가 발생했습니다.');
@@ -46,18 +53,19 @@ export default function Random() {
                 {/* Carousel 컴포넌트 */}
                 <div className="w-full">
                     {loading ? (
-                        <Carousel places={places} />  // 로딩 중일 때 정적 데이터 표시
+                        <p>로딩 중...</p>  // 로딩 중일 때 메시지 표시
                     ) : error ? (
                         <p>{error}</p>  // 에러 발생 시 메시지 표시
                     ) : (
-                        <Carousel places={places} />  // API 데이터를 Carousel에 전달
+                        // 데이터가 배열인 경우에만 Carousel 컴포넌트 렌더링
+                        Array.isArray(places) && places.length > 0 ? (
+                            <Carousel places={places} />
+                        ) : (
+                            <p>데이터가 없습니다.</p>  // 데이터가 없을 경우 메시지 표시
+                        )
                     )}
                 </div>
 
-                {/* 추가적인 다른 컴포넌트나 정보가 들어갈 수 있는 공간 */}
-                <div className="flex flex-col items-center w-full mt-4">
-                    {/* 여기에 추가적인 내용이 들어갈 수 있음 */}
-                </div>
             </section>
         </section>
     );
