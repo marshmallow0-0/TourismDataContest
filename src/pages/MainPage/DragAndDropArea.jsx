@@ -185,7 +185,7 @@
 // };
 
 // export default DragAndDropArea;
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Cropper } from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { useNavigate } from 'react-router-dom';
@@ -194,7 +194,6 @@ import axios from 'axios';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { checkboxActions } from '../../store/checkboxSlice';
-
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 
@@ -236,43 +235,90 @@ const DragAndDropArea = ({
 }) => {
     const dispatch = useDispatch();
 
-    const regions = {
-        "busan": 0,
-        "daegu": 1,
-        "daejeon": 2,
-        "gangwon": 3,
-        "gwangju": 4,
-        "gyeonggi": 5,
-        "incheon": 6,
-        "sejong": 7,
-        "seoul": 8,
-        "jeju": 9,
-        "north_chungcheong": 10,
-        "north_gyeongsang": 11,
+    const regions2 = {
+        "seoul": 1,
+        "gangwon": 2,
+        "incheon": 3,
+        "north_chungcheong": 4,
+        "daejeon": 5,
+        "south_chungcheong": 6,
+        "daegu": 7,
+        "north_gyeongsang": 8,
+        "south_gyeongsang": 8,
+        "gwangju": 9,
+        "busan": 11,
         "north_jeolla": 12,
-        "south_chungcheong": 13,
-        "south_gyeongsang": 14,
-        "south_jeolla": 15,
-        "ulsan": 16
+        "ulsan": 13,
+        "south_jeolla": 14,
+        "sejong": 15,
+        "jeju": 16,
+        "gyeonggi": 17
+    };
+
+    const regions = {
+        "서울": 1,
+        "강원": 2,
+        "인천": 3,
+        "충북": 4,
+        "대전": 5,
+        "충남": 6,
+        "대구": 7,
+        "경북": 8,
+        "광주": 9,
+        "경남": 10,
+        "부산": 11,
+        "전북": 12,
+        "울산": 13,
+        "전남": 14,
+        "세종": 15,
+        "제주": 16,
+        "경기": 17
     };
 
     // Redux에서 checkedValues와 mappedValues 가져오기
     const checkboxes = useSelector(state => state.checkbox.checkboxes || []);
     const selectedCities = useSelector(state => state.checkbox.selectedCities || []);
+    console.log("selected도시", selectedCities)
     const checkedValues = useSelector(state => state.checkbox.checkedValues || []);
     const mappedValues = useSelector(state => state.checkbox.mappedValues || []);
 
-    const numericMappedValues = mappedValues
-        .filter(regionName => regions[regionName] !== undefined)  // 존재하는 지역만 필터링
-        .map(regionName => regions[regionName]);  // 숫자로 변환    console.log("숫자 변환된 지역명", numericMappedValues);  // 변환된 숫자 값이 출력됨
+    // 지역 ID와 카테고리 ID를 상태로 관리
+    const [regionIdsString, setRegionIdsString] = useState('');
+    const [categoryIdsString, setCategoryIdsString] = useState('');
 
-    // 각 배열을 쉼표로 구분된 문자열로 변환
-    const regionIdsString = numericMappedValues.join(',');
-    const categoryIdsString = checkedValues.join(',');
+    useEffect(() => {
+        // 중복을 제거하여 고유한 지역명만 가져옴 (selectedCities 사용)
+        const uniqueSelectedCities = [...new Set(selectedCities)];
 
-    console.log("체크된 값1", checkedValues);
-    console.log("체크된 값2", mappedValues);
-    console.log("변환된 지역명", numericMappedValues)
+        console.log("Selected Cities Before Filtering:", uniqueSelectedCities);  // 추가한 로그
+
+        // 지역명을 숫자로 변환
+        const numericMappedValues = uniqueSelectedCities
+            .filter(cityName => {
+                const isInRegions = regions[cityName] !== undefined;
+                if (!isInRegions) {
+                    console.warn(`Region not found for: ${cityName}`);  // 매핑되지 않는 값 로그 출력
+                }
+                return isInRegions;  // 존재하는 지역만 필터링
+            })
+            .map(cityName => regions[cityName]);  // 숫자로 변환
+
+        console.log("Numeric Mapped Values After Mapping:", numericMappedValues);  // 추가한 로그
+
+        // checkedValues에서도 중복 제거
+        const uniqueCheckedValues = [...new Set(checkedValues)];
+
+        // 변환된 숫자 값과 카테고리 값으로 문자열 설정
+        setRegionIdsString(numericMappedValues.join(','));
+        setCategoryIdsString(uniqueCheckedValues.join(','));
+
+        console.log("Region IDs String:", numericMappedValues.join(','));
+        console.log("Category IDs String:", uniqueCheckedValues.join(','));
+
+    }, [checkboxes, selectedCities, checkedValues]); // mappedValues 제거, selectedCities 사용
+
+
+
 
     const [cropModalIsOpen, setCropModalIsOpen] = useState(false);
     const cropperRef = useRef(null);

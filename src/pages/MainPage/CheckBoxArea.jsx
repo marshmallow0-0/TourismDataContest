@@ -12,12 +12,12 @@ const CheckBoxArea = () => {
     const mappedValues = useSelector(state => state.checkbox.mappedValues || []);
 
     const icons = [
-        { id: 1, label: "건축물", icon: "🏛️" },
-        { id: 2, label: "휴양지", icon: "🏖️" },
-        { id: 3, label: "자연", icon: "🌳" },
-        { id: 4, label: "문화", icon: "🏯" },
-        { id: 5, label: "역사", icon: "📜" },
-        { id: 6, label: "체험", icon: "🎢" },
+        { id: 1, label: "자연", icon: "🌳" },
+        { id: 2, label: "역사", icon: "📜" },
+        { id: 3, label: "휴양", icon: "🏖️" },
+        { id: 4, label: "체험", icon: "🎢" },
+        { id: 5, label: "문화", icon: "🏯" },
+        { id: 6, label: "건축", icon: "🏛️" },
     ];
 
     // 체크박스 토글 처리
@@ -32,17 +32,18 @@ const CheckBoxArea = () => {
 
     // 도시 해제(삭제) 처리
     const handleRemoveCity = (cityName) => {
+        console.log("Removing city:", cityName);  // 로그 추가
         dispatch(checkboxActions.removeCity(cityName));  // cityName만 전달
     };
 
     // 상태 변화 후 체크박스 상태 확인 (useEffect 사용)
-    useEffect(() => {
-        console.log("체크박스 상태 확인1", checkboxes);
-    }, [checkboxes]);
+    // useEffect(() => {
+    //     console.log("체크박스 상태 확인1", checkboxes);
+    // }, [checkboxes]);
 
-    useEffect(() => {
-        console.log("도시 상태 확인", selectedCities);
-    }, [selectedCities]);
+    // useEffect(() => {
+    //     console.log("도시 상태 확인", selectedCities);
+    // }, [selectedCities]);
 
     return (
         <div className="p-2">
