@@ -44,7 +44,7 @@ const InputField = ({ type, id, name, placeholder, value, onChange }) => {
 
 const SignupSchema = Yup.object().shape({
     userId: Yup.string()
-        .min(6, '아이디는 6자 이상이어야 합니다.')
+        .min(5, '아이디는 5자 이상이어야 합니다.')
         .required('아이디는 필수 항목입니다.'),
     email: Yup.string()
         .email('유효한 이메일 주소를 입력하세요.')
