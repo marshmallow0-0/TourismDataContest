@@ -32,10 +32,10 @@ const AccordionGallery = ({ images, favorites, toggleFavorite }) => {
                                 src={image.url}
                                 alt={image.name}
                                 className={` w-20 h-20 object-cover rounded-full transition-transform duration-300`}
-                                onClick={(e) => {
-                                    e.stopPropagation(); // 이미지 클릭 시 아코디언 확장 방지
-                                    toggleFavorite(image.id); // 즐겨찾기 추가/제거
-                                }}
+                                // onClick={(e) => {
+                                //     e.stopPropagation(); // 이미지 클릭 시 아코디언 확장 방지
+                                //     toggleFavorite(image.id); // 즐겨찾기 추가/제거
+                                // }}
                             />
                             <span className="ml-4 text-lg font-semibold">{image.name}</span>
                         </div>
