@@ -64,32 +64,52 @@ const LoginPage = () => {
     }
 
     // 로그인 성공 후 사용자 정보를 로컬 스토리지에 저장하고, 페이지를 이동하는 로직
+    // const onSubmitHandler = async (event) => {
+    //     event.preventDefault();
+    //     try {
+    //         const response = await axios.post(`${API_BASE_URL}/user/login`, {
+    //             identifier: Email,
+    //             password: Password,
+    //         }, {
+    //             withCredentials: true,  // 세션 쿠키를 전송하여 서버와의 인증을 유지
+    //         });
+
+    //         // 로그인 성공 시 처리
+    //         // const token = response.data;  // 서버에서 받은 토큰
+    //         // localStorage.setItem('token', token);  // 토큰을 로컬 스토리지에 저장
+
+    //         dispatch(loginActions.login(response.data.user));  // 사용자 정보를 Redux에 저장
+
+    //         setIsLoggedIn(true);  // 로그인 상태 변경
+    //         console.log('로그인 성공', response.data);
+    //         // 로그인 성공 후 사용자 정보를 메인 페이지로 넘기면서 이동
+    //         navigate('/', { state: { user: response.data.user } });
+
+    //     } catch (error) {
+    //         console.error('로그인 실패', error);
+    //         setError("이메일 또는 비밀번호가 잘못되었습니다.");
+    //     }
+    // }
+
     const onSubmitHandler = async (event) => {
         event.preventDefault();
+        const formData = new FormData();
+        formData.append("identifier", Email);
+        formData.append("password", Password);
+    
         try {
-            const response = await axios.post(`${API_BASE_URL}/user/login`, {
-                identifier: Email,
-                password: Password,
-            }, {
-                withCredentials: true,  // 세션 쿠키를 전송하여 서버와의 인증을 유지
+            const response = await axios.post(`${API_BASE_URL}/user/login`, formData, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data', // 헤더 설정
+                },
             });
-
-            // 로그인 성공 시 처리
-            // const token = response.data;  // 서버에서 받은 토큰
-            // localStorage.setItem('token', token);  // 토큰을 로컬 스토리지에 저장
-
-            dispatch(loginActions.login(response.data.user));  // 사용자 정보를 Redux에 저장
-
-            setIsLoggedIn(true);  // 로그인 상태 변경
-            console.log('로그인 성공', response.data);
-            // 로그인 성공 후 사용자 정보를 메인 페이지로 넘기면서 이동
-            navigate('/', { state: { user: response.data.user } });
-
+            // 나머지 코드...
         } catch (error) {
             console.error('로그인 실패', error);
             setError("이메일 또는 비밀번호가 잘못되었습니다.");
         }
-    }
+    };
 
     const handleKakaoLogin = (event) => {
         try {
@@ -119,7 +139,7 @@ const LoginPage = () => {
                     <div>Loading user information...</div>  // 사용자 정보를 로드 중일 때 로딩 표시
                 )
             ) : (
-                <Form method='post' onSubmit={onSubmitHandler}>
+                <form method='post' onSubmit={onSubmitHandler}>
                     <div className="flex flex-col justify-center items-center w-full h-screen bg-gray-50">
                         {/* 로그인 실패 시 에러 메시지 표시 */}
                         {Error && (
@@ -191,7 +211,7 @@ const LoginPage = () => {
                             </div>
                         </div>
                     </div>
-                </Form>
+                </form>
             )}
         </div>
     );

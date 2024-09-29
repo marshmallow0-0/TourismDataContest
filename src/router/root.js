@@ -26,7 +26,7 @@ const root = createBrowserRouter([
         path: "/",
         element: <RootLayout />,
         id: 'root',
-        loader: tokenLoader,
+        // loader: tokenLoader,
         children: [
             {
                 index: true,
@@ -57,11 +57,11 @@ const root = createBrowserRouter([
             {
                 path: 'auth',
                 element: <AuthenticationPage />,
-                action: action,
+                // action: action,
             },
             {
                 path: 'logout',
-                action: logoutAction,
+                // action: logoutAction,
             },
             // {
             //     path: "kakao/callback",
@@ -82,7 +82,7 @@ const root = createBrowserRouter([
             {
                 path: "travelrecord",
                 element: <Suspense fallback={Loading}><MyTravelRecordsForm /></Suspense>,
-                loader: checkAuthLoader
+                // loader: checkAuthLoader
 
             }
         ],
