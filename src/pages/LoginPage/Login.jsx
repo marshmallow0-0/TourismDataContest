@@ -96,14 +96,21 @@ const LoginPage = () => {
         const formData = new FormData();
         formData.append("identifier", Email);
         formData.append("password", Password);
-    
+
         try {
             const response = await axios.post(`${API_BASE_URL}/user/login`, formData, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data', // 헤더 설정
                 },
+
             });
+            dispatch(loginActions.login(response.data.user));  // 사용자 정보를 Redux에 저장
+
+            setIsLoggedIn(true);  // 로그인 상태 변경
+            console.log('로그인 성공', response.data);
+            // 로그인 성공 후 사용자 정보를 메인 페이지로 넘기면서 이동
+            navigate('/', { state: { user: response.data.user } });
             // 나머지 코드...
         } catch (error) {
             console.error('로그인 실패', error);
