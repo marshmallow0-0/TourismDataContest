@@ -81,7 +81,7 @@ const InfoContainer = styled.div`
 const SlideTitle = styled.h2`
   font-size: 1.25rem;
   font-weight: bold;
-  color: #1d72b8;
+  color: #312E81;
   margin: 0;
 `;
 
@@ -220,7 +220,7 @@ const slides = [
 ];
 
 
-export default function SearchCarousel({ onCategoryChange, touristPlaces }) {
+export default function SearchCarousel({ onCategoryChange, touristPlaces, onSlideChange }) {
   const settings = {
     slide: "div",
     infinite: true,
@@ -234,6 +234,7 @@ export default function SearchCarousel({ onCategoryChange, touristPlaces }) {
     autoplaySpeed: 10000,
     dotsClass: "slick-dots",
     arrows: false, // 화살표를 비활성화
+    afterChange: onSlideChange, // 슬라이드 변경 이벤트
   };
 
   console.log("tourist", touristPlaces);
@@ -246,16 +247,17 @@ export default function SearchCarousel({ onCategoryChange, touristPlaces }) {
             <SlideContent>
               <ImageContainer>
                 <Image
-                  src={place.image_url || "https://via.placeholder.com/150"}
+                  // src={place.images[0].img_url || "https://via.placeholder.com/150"}
+                  src={place.blur_image || "https://via.placeholder.com/150"}
                   alt={place.name}
                 />
               </ImageContainer>
               <InfoContainer>
-                <SlideSubtitle>전화번호: {place.phone}</SlideSubtitle>
-                <SlideLocation>위치: {place.address_name}</SlideLocation>
-                <SlideAddress>주차: {place.parking !== "정보 없음" ? place.parking : '정보 없음'}</SlideAddress>
-                <SlideHours>반려동물: {place.pet === '가능' ? '허용' : '불허'}</SlideHours>
-                <SlidePhone>유아: {place.baby === '가능' ? '가능' : '불가능'}</SlidePhone>
+                <SlideSubtitle>전화번호: {place.tel}</SlideSubtitle>
+                <SlideLocation>위치: {place.address}</SlideLocation>
+                <SlideAddress>주차: {place.parking}</SlideAddress>
+                <SlideHours>반려동물: {place.petsAvailable}</SlideHours>
+                {/* <SlidePhone>유아: {place.baby === '가능' ? '가능' : '불가능'}</SlidePhone> */}
               </InfoContainer>
             </SlideContent>
           </div>

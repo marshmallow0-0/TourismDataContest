@@ -5,8 +5,9 @@ import { checkboxActions } from '../../store/checkboxSlice';
 const MapCity = ({ cityId, name, rank, d, textPosition = { x: 380, y: 370 } }) => {
     const dispatch = useDispatch();
 
+    // 도시 클릭 시 toggleCity 호출
     const handleClick = () => {
-        dispatch(checkboxActions.addCity(name)); 
+        dispatch(checkboxActions.toggleCity({ cityName: name, value: cityId }));
     };
 
     return (
@@ -32,8 +33,9 @@ const MapCity = ({ cityId, name, rank, d, textPosition = { x: 380, y: 370 } }) =
 
 const Map = ({ heatmapData }) => {
     const dispatch = useDispatch();
-    const selectedCities = useSelector(state => state.checkbox.selectedCities);
+    const selectedCities = useSelector(state => state.checkbox.selectedCities || []);
 
+    // 도시 선택 해제 핸들러
     const handleRemoveCity = (cityName) => {
         dispatch(checkboxActions.removeCity(cityName));
     };
@@ -52,6 +54,16 @@ const Map = ({ heatmapData }) => {
                     />
                 ))}
             </svg>
+
+            {/* 선택된 도시 목록 */}
+            {/* <div className="selected-cities-list">
+                {selectedCities.map(city => (
+                    <div key={city}>
+                        <span>{city}</span>
+                        <button onClick={() => handleRemoveCity(city)}>Remove</button>
+                    </div>
+                ))}
+            </div> */}
         </div>
     );
 };

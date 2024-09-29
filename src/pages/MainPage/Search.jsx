@@ -20,6 +20,7 @@ export default function MainComponent() {
     const [images, setImages] = useState([]); //api
     const [places, setPlaces] = useState([]); //api
 
+
     // useEffect(() => {
     //     const fetchData = async () => {
     //         try {
@@ -64,46 +65,47 @@ export default function MainComponent() {
     //const [checkedValues, setCheckedValues] = useState([true, true]);
     //const [mappedValues, setMappedValues] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-    const handleCheckboxGroupChange = (updatedCheckboxes) => {
-        let combinedLabels = [];
-        const mapping = {
-            'Incheon_history': 2,
-            'Incheon_building': 0,
-            'Incheon_recreation': 4,
-            'Incheon_nature': 3,
-            'Incheon_culture': 1,
-            'Seoul_history': 7,
-            'Seoul_building': 5,
-            'Seoul_recreation': 9,
-            'Seoul_nature': 8,
-            'Seoul_culture': 6
-        };
+    // const handleCheckboxGroupChange = (updatedCheckboxes) => {
+    //     let combinedLabels = [];
 
-        const isIncheonChecked = updatedCheckboxes[0].isChecked;
-        const isSeoulChecked = updatedCheckboxes[1].isChecked;
+    //     // const mapping = {
+    //     //     'Incheon_history': 2,
+    //     //     'Incheon_building': 0,
+    //     //     'Incheon_recreation': 4,
+    //     //     'Incheon_nature': 3,
+    //     //     'Incheon_culture': 1,
+    //     //     'Seoul_history': 7,
+    //     //     'Seoul_building': 5,
+    //     //     'Seoul_recreation': 9,
+    //     //     'Seoul_nature': 8,
+    //     //     'Seoul_culture': 6
+    //     // };
 
-        const updatedCheckedValues = updatedCheckboxes.map(cb => cb.isChecked);
-        //setCheckedValues(updatedCheckedValues);
+    //     const isIncheonChecked = updatedCheckboxes[0].isChecked;
+    //     const isSeoulChecked = updatedCheckboxes[1].isChecked;
 
-        localStorage.setItem('checkboxes', JSON.stringify(updatedCheckboxes));
+    //     const updatedCheckedValues = updatedCheckboxes.map(cb => cb.isChecked);
+    //     //setCheckedValues(updatedCheckedValues);
 
-        if (isIncheonChecked && isSeoulChecked) {
-            combinedLabels = combinedLabels.concat(
-                updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Incheon_' + cb.label)
-            );
-            combinedLabels = combinedLabels.concat(
-                updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Seoul_' + cb.label)
-            );
-        } else if (isIncheonChecked) {
-            combinedLabels = updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Incheon_' + cb.label);
-        } else if (isSeoulChecked) {
-            combinedLabels = updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Seoul_' + cb.label);
-        }
+    //     localStorage.setItem('checkboxes', JSON.stringify(updatedCheckboxes));
 
-        const mappedValues = combinedLabels.map(label => mapping[label]);
-        //setMappedValues(mappedValues);
-        //setCheckboxes(updatedCheckboxes);
-    };
+    //     if (isIncheonChecked && isSeoulChecked) {
+    //         combinedLabels = combinedLabels.concat(
+    //             updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Incheon_' + cb.label)
+    //         );
+    //         combinedLabels = combinedLabels.concat(
+    //             updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Seoul_' + cb.label)
+    //         );
+    //     } else if (isIncheonChecked) {
+    //         combinedLabels = updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Incheon_' + cb.label);
+    //     } else if (isSeoulChecked) {
+    //         combinedLabels = updatedCheckboxes.slice(2).filter(cb => cb.isChecked).map(cb => 'Seoul_' + cb.label);
+    //     }
+
+    //     const mappedValues = combinedLabels.map(label => mapping[label]);
+    //     //setMappedValues(mappedValues);
+    //     //setCheckboxes(updatedCheckboxes);
+    // };
 
     // useEffect(() => {
     //     if (uploadedImage) {
@@ -141,14 +143,6 @@ export default function MainComponent() {
         handleDroppedFiles(files);
     };
 
-    const handleHowButtonClick = () => {
-        navigate('/how');
-    };
-
-    const handleWhoButtonClick = () => {
-        navigate('/who');
-    };
-
     const cropperRef = createRef();
 
     const getCropData = () => {
@@ -159,39 +153,39 @@ export default function MainComponent() {
 
 
     console.log("ImageFile:1 ", imageFile);
-    const handleButtonClick = () => {
-        console.log("Button Clicked"); // 이 메시지가 출력되는지 확인
-        console.log("ImageFile:2 ", imageFile); // ImageFile의 상태를 확인
+    // const handleButtonClick = () => {
+    //     console.log("Button Clicked"); // 이 메시지가 출력되는지 확인
+    //     console.log("ImageFile:2 ", imageFile); // ImageFile의 상태를 확인
 
-        setButtonVisible(false);
-        setModal(!modal);
+    //     setButtonVisible(false);
+    //     setModal(!modal);
 
-        if (imageFile) {
-            const formData = new FormData(); // FormData 객체 생성
-            formData.append('user_image', imageFile); // FastAPI에서의 파라미터 이름과 일치해야 합니다.
-            if (prompt) {
-                formData.append('user_text', prompt); // FastAPI에서의 파라미터 이름과 일치해야 합니다.
-            }
+    //     if (imageFile) {
+    //         const formData = new FormData(); // FormData 객체 생성
+    //         formData.append('user_image', imageFile); // FastAPI에서의 파라미터 이름과 일치해야 합니다.
+    //         if (prompt) {
+    //             formData.append('user_text', prompt); // FastAPI에서의 파라미터 이름과 일치해야 합니다.
+    //         }
 
-            const imageUrl = uploadedImage.src;
-            console.log([...formData.entries()]);
-            // API 요청 함수 사용
-            getRecommendPlaces(formData)
-                .then((jsonData) => {
-                    setModalIsOpen(false);
-                    console.log("0");
-                    console.log(jsonData);
-                    // search 페이지로 이동하고, 상태를 전달
-                    navigate('/search', { state: { jsonData, uploadedImage: imageUrl } });
-                })
-                .catch(error => {
-                    console.error(error);
-                    navigate('/fail', { state: { uploadedImage: imageUrl } });
-                });
-        } else {
-            console.error("Image file is missing");
-        }
-    };
+    //         const imageUrl = uploadedImage.src;
+    //         console.log([...formData.entries()]);
+    //         // API 요청 함수 사용
+    //         getRecommendPlaces(formData)
+    //             .then((jsonData) => {
+    //                 setModalIsOpen(false);
+    //                 console.log("0");
+    //                 console.log(jsonData);
+    //                 // search 페이지로 이동하고, 상태를 전달
+    //                 navigate('/search', { state: { jsonData, uploadedImage: imageUrl } });
+    //             })
+    //             .catch(error => {
+    //                 console.error(error);
+    //                 navigate('/fail', { state: { uploadedImage: imageUrl } });
+    //             });
+    //     } else {
+    //         console.error("Image file is missing");
+    //     }
+    // };
 
     const handleCityClick = (cityId) => {
         const clickedCity = mapData.find(city => city.cityId === cityId);
@@ -205,6 +199,7 @@ export default function MainComponent() {
             });
         }
     };
+
 
 
 
@@ -386,10 +381,9 @@ export default function MainComponent() {
                         uploadedImage={uploadedImage}
                         handleDrop={handleDrop}
                         handleFileChange={handleFileChange}
-                        handleCheckboxGroupChange={handleCheckboxGroupChange}
+                        // handleCheckboxGroupChange={handleCheckboxGroupChange}
                         buttonVisible={buttonVisible}
                         isImageUploaded={isImageUploaded}
-                        handleHowButtonClick={handleHowButtonClick}
                         modalIsOpen={modalIsOpen}
                     />
 

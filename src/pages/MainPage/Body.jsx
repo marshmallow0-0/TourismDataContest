@@ -26,36 +26,42 @@ import { useLocation } from 'react-router-dom';
 import { currentUser } from "../../api/api";
 
 
+
 const MainBody = () => {
 
-    const [user, setUser] = useState(null);
+    const location = useLocation();
+    const isAuthenticated = useSelector((state) => state.login.isAuthenticated);  
+    const user2 = useSelector((state) => state.login.user);  // 사용자 정보 가져오기
+
+    const [user, setUser] = useState(location.state?.user || null);  // navigate로 받은 user 정보를 먼저 확인
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
 
     // 컴포넌트가 마운트될 때 사용자 정보를 가져옴
     useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                const userData = await currentUser();  // 사용자 정보 가져오기
-
-                setUser(userData);  // 사용자 정보 설정
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    console.log('User is not authenticated');
-                    setError('로그인이 필요합니다.');
-                    // navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
-                } else {
-                    console.error('Error fetching user data:', error);
-                    setError('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+        // 만약 navigate로 전달된 사용자 정보가 없다면, 서버에서 정보를 가져옵니다.
+        if (!user) {
+            const fetchCurrentUser = async () => {
+                try {
+                    const userData = await currentUser();  // 서버에서 사용자 정보 가져오기
+                    setUser(userData);  // 사용자 정보 설정
+                } catch (error) {
+                    if (error.response && error.response.status === 401) {
+                        console.log('User is not authenticated');
+                        setError('로그인이 필요합니다.');
+                        navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
+                    } else {
+                        console.error('Error fetching user data:', error);
+                        setError('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+                    }
                 }
-            }
-        };
+            };
 
-        fetchCurrentUser();
-    }, [navigate]);  // 빈 배열로 설정하여 컴포넌트 마운트 시 한 번만 실행
+            fetchCurrentUser();
+        }
+    }, [navigate, user]);  // user가 없을 때만 실행되도록 설정
 
-    const location = useLocation();  // useLocation 훅 사용
 
     const selectedCities = useSelector(state => state.checkbox.selectedCities);
     const checkboxes = useSelector(state => state.checkbox.checkboxes);

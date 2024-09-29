@@ -96,37 +96,37 @@ const Icon = styled.span`
   }
 `;
 
-const slides = [
-  {
-    img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_640.jpg",
-    title: "여행지 추천",
-    subtitle: "가족과 함께 즐거운 시간을 보내세요",
-    location: "서울특별시 강남구",
-    zoom: 1,
-    like: 2,
-    bookmark: 3
-  },
-  {
-    img: "https://cdn.pixabay.com/photo/2017/12/15/13/51/polynesia-3021072_640.jpg",
-    title: "조용한 휴식의 도시 강릉",
-    subtitle: "네디슨 칼릴로 함께 즐길 수 있는 강릉",
-    location: "강원 강릉시 강릉대로 33",
-    zoom: 4,
-    like: 5,
-    bookmark: 6
-  },
-  {
-    img: "https://cdn.pixabay.com/photo/2023/10/23/17/10/landscape-8336497_640.jpg",
-    title: "별이 빛나는 밤에",
-    subtitle: "아름다운 별빛을 감상하세요",
-    location: "경기도 양평군",
-    zoom: 7,
-    like: 8,
-    bookmark: 9
-  }
-];
+// const slides = [
+//   {
+//     img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_640.jpg",
+//     title: "여행지 추천",
+//     subtitle: "가족과 함께 즐거운 시간을 보내세요",
+//     location: "서울특별시 강남구",
+//     zoom: 1,
+//     like: 2,
+//     bookmark: 3
+//   },
+//   {
+//     img: "https://cdn.pixabay.com/photo/2017/12/15/13/51/polynesia-3021072_640.jpg",
+//     title: "조용한 휴식의 도시 강릉",
+//     subtitle: "네디슨 칼릴로 함께 즐길 수 있는 강릉",
+//     location: "강원 강릉시 강릉대로 33",
+//     zoom: 4,
+//     like: 5,
+//     bookmark: 6
+//   },
+//   {
+//     img: "https://cdn.pixabay.com/photo/2023/10/23/17/10/landscape-8336497_640.jpg",
+//     title: "별이 빛나는 밤에",
+//     subtitle: "아름다운 별빛을 감상하세요",
+//     location: "경기도 양평군",
+//     zoom: 7,
+//     like: 8,
+//     bookmark: 9
+//   }
+// ];
 
-export default function CarouselComponent() {
+export default function CarouselComponent({ places }) {
   const settings = {
     slidesToShow: 1,  // 한 번에 몇 개의 슬라이드를 보여줄지 설정
     slidesToScroll: 1,  // 한 번에 몇 개의 슬라이드를 넘길지 설정
@@ -134,33 +134,47 @@ export default function CarouselComponent() {
     speed: 1000,
     draggable: true,
     fade: true,
-    dots: true,
+    dots: false,
     autoplay: true,
     autoplaySpeed: 10000,
     dotsClass: "slick-dots",
-    arrows: false
+    arrows: false,
+    
   };
 
   return (
-    <div className="relative mt-20 mb-5 p-5 mx-auto max-w-2xl text-center border-4 border-black rounded-lg">
+    <div className="relative mt-10 mb-5 p-4 mx-auto max-w-md sm:max-w-lg lg:max-w-2xl text-center bg-white border-2 shadow-md border-gray-300 rounded-lg">
       <StyledSlider {...settings}>
-        {slides.map((slide, index) => (
-          <div key={index} className="w-full h-full drop-shadow-lg relative">
-            <SlideContent>
+        {places.map((place, index) => (
+          <div key={index} className="w-full h-full relative">
+            <div className="p-4 sm:p-6 bg-white rounded-lg transition-shadow duration-300">
+              {/* 상단 이름과 아이콘 영역 */}
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center space-x-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{place.name}</h2>
+                </div>
+              </div>
 
-              <IconContainer>
-                <Icon><FaSearch color="#51abf3" /> {slide.zoom}</Icon>
-                {/* <Icon><FaHeart color="#51abf3" /> {slide.like}</Icon> */}
-                <Icon><FaStar color="#FFFF00" /> {slide.bookmark}</Icon>
-              </IconContainer>
-              <Image src={slide.img} alt="slide" />
-              <SlideLocation>{slide.location}</SlideLocation>
-              <SlideTitle>{slide.title}</SlideTitle>
-              <SlideSubtitle>{slide.subtitle}</SlideSubtitle>
-            </SlideContent>
+              {/* 이미지 영역 */}
+              <img
+                src={place.images[0].img_url}
+                alt={place.name}
+                className="w-full h-48 sm:h-64 object-cover rounded-lg mb-4"
+              />
+
+              {/* 주소 및 설명 부분 */}
+              <div className="text-left">
+                <p className="text-gray-700 text-sm sm:text-base mb-2">
+                  <span className="font-bold text-gray-800">주소: </span>{place.address}
+                </p>
+                <h3 className="text-base sm:text-lg font-semibold text-indigo-700 mb-2">{place.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-500">{place.description}</p>
+              </div>
+            </div>
           </div>
         ))}
       </StyledSlider>
     </div>
+
   );
 }
