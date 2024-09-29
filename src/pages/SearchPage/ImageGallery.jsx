@@ -18,7 +18,7 @@ const ImageGallery = () => {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const imageData = await getTouristImages();  // 백엔드에서 이미지를 요청
+                const imageData = await getTouristImages(4);  // 백엔드에서 이미지를 요청
                 setImages(imageData.map(image => image.img_url));  // 로드된 이미지 URL만 추출하여 상태에 저장
                 setLoading(false);  // 로딩이 끝나면 false로 설정
             } catch (error) {
