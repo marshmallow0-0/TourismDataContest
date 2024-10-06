@@ -13,7 +13,7 @@ import Prompt from './Prompt';
 import { getRecommendPlaces, getTouristImages, getRandomPlaces } from '../../api/api';
 
 
-export default function MainComponent() {
+export default function MainComponent({ token }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -385,6 +385,7 @@ export default function MainComponent() {
                         buttonVisible={buttonVisible}
                         isImageUploaded={isImageUploaded}
                         modalIsOpen={modalIsOpen}
+                        token={token}
                     />
 
                 </div>
