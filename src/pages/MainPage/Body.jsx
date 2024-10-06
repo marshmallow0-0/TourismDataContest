@@ -12,7 +12,7 @@ import "cropperjs/dist/cropper.css";
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Banners} from "../data";
+import { Banners } from "../data";
 
 // import ModalExample from '../../components/Modal';
 // import CheckBoxGroup from '../../components/MainCheckBoxGroup';
@@ -23,34 +23,61 @@ import Section from "./Section"
 import { useSelector } from "react-redux";
 
 import { useLocation } from 'react-router-dom';
-import { currentUser } from "../../api/api";
+import { currentUser, getCurrentUser } from "../../api/api";
 
+import { useDispatch } from 'react-redux';
+import { loginActions } from '../../store/loginSlice';
+import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const MainBody = () => {
 
+    const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
+    console.log("토큰확인", token);
     const location = useLocation();
-    const isAuthenticated = useSelector((state) => state.login.isAuthenticated);  
-    const user2 = useSelector((state) => state.login.user);  // 사용자 정보 가져오기
-
+    const isAuthenticated = useSelector((state) => state.login.isAuthenticated);
+    console.log("로그인 여부 확인", isAuthenticated)
     const [user, setUser] = useState(location.state?.user || null);  // navigate로 받은 user 정보를 먼저 확인
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+
+
+    // const checkLoginStatus = async () => {
+    //     try {
+    //         const response = await axios.get(`${API_BASE_URL}/user/me`, {
+    //             withCredentials: true, // 쿠키 포함
+    //         });
+    //         if (response.data.user) {
+    //             dispatch(loginActions.login(response.data.user)); // 사용자가 로그인 상태일 경우
+    //         } else {
+    //             dispatch(loginActions.logout());
+    //         }
+    //     } catch (error) {
+    //         console.error('세션 확인 중 오류 발생', error);
+    //         dispatch(loginActions.logout());
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     checkLoginStatus(); // 컴포넌트가 마운트될 때 로그인 상태 확인
+    // }, []);
 
     // 컴포넌트가 마운트될 때 사용자 정보를 가져옴
     useEffect(() => {
         // 만약 navigate로 전달된 사용자 정보가 없다면, 서버에서 정보를 가져옵니다.
-        if (!user) {
+        if (token) {
             const fetchCurrentUser = async () => {
                 try {
-                    const userData = await currentUser();  // 서버에서 사용자 정보 가져오기
+                    const userData = await getCurrentUser(token);  // 서버에서 사용자 정보 가져오기
                     setUser(userData);  // 사용자 정보 설정
                 } catch (error) {
                     if (error.response && error.response.status === 401) {
                         console.log('User is not authenticated');
                         setError('로그인이 필요합니다.');
-                        navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
+                        //navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
                     } else {
                         console.error('Error fetching user data:', error);
                         setError('사용자 정보를 불러오는 중 오류가 발생했습니다.');
@@ -60,7 +87,7 @@ const MainBody = () => {
 
             fetchCurrentUser();
         }
-    }, [navigate, user]);  // user가 없을 때만 실행되도록 설정
+    }, []);  // user가 없을 때만 실행되도록 설정
 
 
     const selectedCities = useSelector(state => state.checkbox.selectedCities);
