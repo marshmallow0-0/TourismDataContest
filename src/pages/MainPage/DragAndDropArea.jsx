@@ -232,6 +232,7 @@ const DragAndDropArea = ({
     buttonVisible,
     isImageUploaded,
     modalIsOpen,
+    token
 }) => {
     const dispatch = useDispatch();
 
@@ -386,6 +387,7 @@ const DragAndDropArea = ({
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data',  // 파일 전송을 위한 헤더
+                            'Authorization': `Bearer ${token}`,  // Bearer 토큰 추가
                         },
                         params,  // 쿼리 스트링 파라미터로 추가
                     }

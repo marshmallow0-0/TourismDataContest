@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CiStar } from "react-icons/ci";
+import { FaStar } from "react-icons/fa";
+import axios from "axios";
 
 const StyledSlider = styled(Slider)`
   .slick-list {
@@ -179,48 +182,75 @@ const Button = styled.button`
     width: 100%;
   }
 `;
-// Slide data
-const slides = [
-  {
-    img: "https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_640.jpg",
-    title: "울산 대공원",
-    subtitle: "울산광역시의 테마파크",
-    location: "울산광역시 남구",
-    address: "울산광역시 남구 대공원 146-1",
-    hours: "영업 시간: 영업 종료",
-    phone: "052-256-5306",
-    zoom: 1,
-    like: 2,
-    bookmark: 3
-  },
-  {
-    img: "https://cdn.pixabay.com/photo/2017/12/15/13/51/polynesia-3021072_640.jpg",
-    title: "조용한 휴식의 도시 강릉",
-    subtitle: "강릉의 아름다움을 경험하세요",
-    location: "강원 강릉시 강릉대로 33",
-    address: "강원도 강릉시 강릉대로 33",
-    hours: "10:00 - 20:00",
-    phone: "033-123-4567",
-    zoom: 4,
-    like: 5,
-    bookmark: 6
-  },
-  {
-    img: "https://cdn.pixabay.com/photo/2023/10/23/17/10/landscape-8336497_640.jpg",
-    title: "별이 빛나는 밤에",
-    subtitle: "경기도 양평군의 아름다운 별빛을 감상하세요",
-    location: "경기도 양평군",
-    address: "경기도 양평군 양평대로 123",
-    hours: "08:00 - 22:00",
-    phone: "031-123-4567",
-    zoom: 7,
-    like: 8,
-    bookmark: 9
+
+const FavoriteButton = styled.button`
+  background-color: #f8f9fa; /* 약간 밝은 배경 */
+  border: 1px solid #ddd; /* 얇은 경계선 */
+  border-radius: 8px; /* 부드러운 모서리 */
+  padding: 8px 12px; /* 적당한 패딩 */
+  font-size: 1rem; /* 글씨 크기 조정 */
+  color: ${props => (props.isFavorited ? '#ff6b6b' : '#666')}; /* 색상 조정 */
+  display: inline-flex; /* 아이콘과 텍스트를 수평으로 정렬 */
+  align-items: center; /* 아이콘과 텍스트를 세로 중앙 정렬 */
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 효과 */
+
+  &:hover {
+    background-color: #f1f3f5; /* 마우스 오버 시 배경색 변경 */
+    color: #ff6b6b; /* 마우스 오버 시 색상 변경 */
   }
-];
+
+  svg {
+    margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 */
+    font-size: 1.2rem; /* 아이콘 크기 조정 */
+  }
+`;
 
 
-export default function SearchCarousel({ onCategoryChange, touristPlaces, onSlideChange }) {
+const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
+  const [favorites, setFavorites] = useState([]);
+
+  const toggleFavorite = async (place) => {
+    try {
+      let response;
+      if (favorites.includes(place.id)) {
+        // 즐겨찾기 해제 (DELETE 요청)
+        response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/record/favorites`, {
+          data: { placeId: place.id },  // place의 id 사용
+          withCredentials: true,  // 세션 또는 인증 토큰 사용 시 필요
+        });
+      } else {
+        // 즐겨찾기 추가 (POST 요청)
+        response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/record/favorites`, {
+          name: place.name,
+          address: place.address,
+          petsAvailable: place.petsAvailable,
+          tel: place.tel,
+          parking: place.parking,
+          x: place.x,  // 좌표 값이 있다면 사용
+          y: place.y,  // 좌표 값이 있다면 사용
+          images: place.images,  // 이미지가 있다면 전송
+          blur_image: place.blur_image  // Blur 이미지가 있다면 전송
+        }, {
+          withCredentials: true,  // 세션 또는 인증 토큰 사용 시 필요
+        });
+      }
+
+      // 응답이 성공적이면 상태 업데이트
+      if (response.status === 200) {
+        if (favorites.includes(place.id)) {
+          setFavorites(favorites.filter(id => id !== place.id));  // 즐겨찾기 해제
+        } else {
+          setFavorites([...favorites, place.id]);  // 즐겨찾기 추가
+        }
+      } else {
+        console.error('즐겨찾기 요청 실패:', response.data);
+      }
+    } catch (error) {
+      console.error('즐겨찾기 처리 중 오류:', error);
+    }
+  };
+
   const settings = {
     slide: "div",
     infinite: true,
@@ -257,7 +287,23 @@ export default function SearchCarousel({ onCategoryChange, touristPlaces, onSlid
                 <SlideLocation>위치: {place.address}</SlideLocation>
                 <SlideAddress>주차: {place.parking}</SlideAddress>
                 <SlideHours>반려동물: {place.petsAvailable}</SlideHours>
-                {/* <SlidePhone>유아: {place.baby === '가능' ? '가능' : '불가능'}</SlidePhone> */}
+                <FavoriteButton
+                  onClick={() => toggleFavorite(place)}  // place 객체를 직접 전달
+                  isFavorited={favorites.includes(place.id)}  // place.id를 기반으로 즐겨찾기 상태 확인
+                >
+                  {/* 아이콘과 텍스트를 버튼에 한 줄로 나란히 배치 */}
+                  {favorites.includes(place.id) ? (
+                    <>
+                      <FaStar color="gold" style={{ marginRight: '8px' }} />
+                      즐겨찾기 삭제
+                    </>
+                  ) : (
+                    <>
+                      <CiStar color="gray" style={{ marginRight: '8px' }} />
+                      즐겨찾기 추가
+                    </>
+                  )}
+                </FavoriteButton>
               </InfoContainer>
             </SlideContent>
           </div>
@@ -272,3 +318,5 @@ export default function SearchCarousel({ onCategoryChange, touristPlaces, onSlid
     </div>
   );
 }
+
+export default SearchCarousel;

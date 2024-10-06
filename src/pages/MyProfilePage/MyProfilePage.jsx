@@ -1,15 +1,19 @@
 import axios from "axios";
 import BasicLayout from "../../layouts/BasicLayout";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import userProfile from '../../img/userProfile.png';
 import { FaLandmark } from 'react-icons/fa';
 import AccordionGallery from "./AccordionGallery";
+import { useLocation } from 'react-router-dom';
+import { getSearchHistory } from "../../api/api";
 
-const MyProfilePage = (props) => {
-    const { logs } = props;
+const MyProfilePage = () => {
     const navigate = useNavigate();
 
+    const location = useLocation();
+    const { user } = location.state || {};  // 전달된 user 정보
+    console.log("프로필에서의 유저정보 확인", user);
     // 초기 데이터
     const initialItems = [
         { id: 1, name: '강원도', date: '2023-09-15', imgUrl: 'https://cdn.pixabay.com/photo/2023/09/14/16/17/paddle-boat-8253274_1280.jpg' },
@@ -24,7 +28,7 @@ const MyProfilePage = (props) => {
     const [favorites, setFavorites] = useState([]);
     const toggleFavorite = (imageId) => {
         if (favorites.includes(imageId)) {
-            setFavorites(favorites.filter(id => id !== imageId)); 
+            setFavorites(favorites.filter(id => id !== imageId));
         } else {
             setFavorites([...favorites, imageId]);
         }
@@ -37,13 +41,50 @@ const MyProfilePage = (props) => {
         { id: 4, url: 'https://cdn.pixabay.com/photo/2016/08/11/23/48/mountains-1587287_640.jpg', name: '즐겨찾기4' },
     ];
 
+    // const handleHistory = async () => {
+    //     try {
+    //         // POST 요청으로 데이터 보내기
+    //         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/record/history`, {
+    //             withCredentials: true, // 세션 쿠키가 전송되도록 설정
+    //         });
+    //         console.log('Response:', response.data);
+    //     } catch (error) {
+    //         console.error('Error sending data to backend:', error);
+    //     }
+    // };
+
+    // // useEffect로 컴포넌트가 마운트될 때 handleHistory 실행
+    // useEffect(() => {
+    //     if (user && user.id) {
+    //         handleHistory(); // user 정보가 있을 때만 실행
+    //     }
+    // }, [user]); // user가 변경될 때마다 실행, 처음 로드될 때도 실행
+
+    // 검색 기록 API 호출하는 함수
+    const fetchSearchHistory = async () => {
+        try {
+            const searchHistory = await getSearchHistory();  // 토큰을 사용하여 검색 기록 가져오기
+            setItems(searchHistory);  // 검색 기록 상태 업데이트
+            console.log("검색 기록:", searchHistory);
+        } catch (error) {
+            console.error("Error fetching search history:", error);
+        }
+    };
+
+    fetchSearchHistory();
+    // 컴포넌트가 마운트될 때 검색 기록 가져오기
+    useEffect(() => {
+        if (user && user.token) {
+            fetchSearchHistory();  // 검색 기록 가져오는 함수 실행
+        }
+    }, [user]);  // user가 변경될 때마다 실행
     return (
         <BasicLayout>
             <div className="max-w-7xl mx-auto p-6 bg-white">
                 {/* 프로필 헤더 */}
                 <header className="mb-8 text-center bg-gradient-to-r from-blue-500 to-indigo-600 p-6 rounded-lg shadow-md">
                     <h1 className="text-3xl font-bold text-white">
-                        Profile<span className="font-light"> User</span>
+                        Profile<span className="font-light"> </span>
                     </h1>
                     <div className="mt-3 border-t border-white opacity-50"></div>
                 </header>
@@ -57,8 +98,8 @@ const MyProfilePage = (props) => {
 
                     {/* 프로필 세부 정보 */}
                     <div className="mt-6 md:mt-0 md:ml-8 flex flex-col items-center md:items-start">
-                        <h2 className="text-2xl font-bold text-gray-800">Client Name</h2>
-                        <p className="text-gray-500 mt-2">email@example.com</p>
+                        <h2 className="text-2xl font-bold text-gray-800">{user.nickname}</h2>
+                        <p className="text-gray-500 mt-2">{user.email}</p>
 
                         <div className="mt-4 flex space-x-6">
                             <div className="flex flex-col items-center">

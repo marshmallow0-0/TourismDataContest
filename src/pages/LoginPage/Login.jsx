@@ -94,23 +94,25 @@ const LoginPage = () => {
     const onSubmitHandler = async (event) => {
         event.preventDefault();
         const formData = new FormData();
-        formData.append("identifier", Email);
+        formData.append("username", Email);
         formData.append("password", Password);
 
         try {
             const response = await axios.post(`${API_BASE_URL}/user/login`, formData, {
-                withCredentials: true,
+                withCredentials: true,  // 세션 쿠키를 함께 전송
                 headers: {
                     'Content-Type': 'multipart/form-data', // 헤더 설정
                 },
-
             });
-            dispatch(loginActions.login(response.data.user));  // 사용자 정보를 Redux에 저장
+            const token = response.data.access_token;  // 서버에서 JWT 토큰을 반환
+            dispatch(loginActions.login({ token }));  // 사용자 정보를 Redux에 저장
 
             setIsLoggedIn(true);  // 로그인 상태 변경
-            console.log('로그인 성공', response.data);
+            console.log("로그인 반환값 확인", response)
+            console.log('로그인 성공', token);
             // 로그인 성공 후 사용자 정보를 메인 페이지로 넘기면서 이동
-            navigate('/', { state: { user: response.data.user } });
+            //navigate('/', { state: { token: token } });
+            navigate('/');
             // 나머지 코드...
         } catch (error) {
             console.error('로그인 실패', error);
@@ -122,12 +124,27 @@ const LoginPage = () => {
         try {
             event.preventDefault();
             // window.location.href = 'http://localhost:8000/user/auth/kakao';  // 카카오 로그인 페이지로 리다이렉트
-            window.location.href = `https://${API_BASE_URL}/user/auth/kakao`;  // 카카오 로그인 페이지로 리다이렉트
+            window.location.href = `${API_BASE_URL}/user/auth/kakao`;  // 카카오 로그인 페이지로 리다이렉트
         } catch (error) {
             console.error("카카오 로그인 실패:", error);
         }
     };
 
+    // const handleKakaoLogin = async (event) => {
+    //     event.preventDefault();
+    //     try {
+    //         // 카카오 로그인 API 요청
+    //         const response = await axios.get(`${API_BASE_URL}/user/auth/kakao`);
+
+    //         // 상태 코드가 200일 경우 메인 페이지로 리다이렉트
+    //         if (response.status === 200) {
+    //             // window.location.href = '/';  // 메인 페이지로 이동
+    //             navigate('/');  // 메인 페이지로 이동 (새로고침 없이)
+    //         }
+    //     } catch (error) {
+    //         console.error("카카오 로그인 실패:", error);
+    //     }
+    // };
     // 페이지 로드 시 로컬 스토리지에서 사용자 정보를 가져와 로그인 상태를 유지하는 로직
     // useEffect(() => {
     //     const storedUser = localStorage.getItem('user');

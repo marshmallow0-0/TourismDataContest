@@ -115,11 +115,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ModalExample from '../../components/Modal';
 import { getLogOut2 } from '../../api/api';
+import { useSelector } from 'react-redux';
+
 
 function Section({ user }) {
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
     const [modalIsOpen, setModalIsOpen] = useState(true); // 모달 상태 관리
     const [contentVisible, setContentVisible] = useState(false); // 콘텐츠 가시성 상태
+
+    const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
+
+    console.log("프로필 토큰확인2", token);
 
     const navigate = useNavigate();
 
@@ -139,9 +145,7 @@ function Section({ user }) {
 
     const handleLogout = async () => {
         try {
-            await getLogOut2();
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            await getLogOut2(token);
             console.log("logout!");
             navigate('/auth');
         } catch (error) {
@@ -191,16 +195,16 @@ function Section({ user }) {
 
                         {/* 오른쪽 버튼들 */}
                         <div className="flex flex-col w-full sm:w-1/2 max-w-xs mx-auto space-y-6">
-                            <Link to="/myprofile">
+                            <Link to="/myprofile" state={{ user: user }}>
                                 <button className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-semibold rounded-lg shadow-lg hover:from-indigo-500 hover:to-indigo-700 transform hover:scale-105 transition duration-300 ease-in-out">
                                     Profile
                                 </button>
                             </Link>
-                            <Link to="/travelrecord">
+                            {/* <Link to="/travelrecord">
                                 <button className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:from-blue-500 hover:to-blue-700 transform hover:scale-105 transition duration-300 ease-in-out">
                                     TravelRecord
                                 </button>
-                            </Link>
+                            </Link> */}
                             <button
                                 onClick={handleLogout}
                                 className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:from-blue-500 hover:to-blue-700 transform hover:scale-105 transition duration-300 ease-in-out"
@@ -224,7 +228,7 @@ function Section({ user }) {
                 )}
             </div>
             <section>
-                <Search />
+                <Search token={token} />
             </section>
             <section id='random'>
                 <Random />

@@ -7,10 +7,10 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 // Main Page 배너의 무작위 사진 배치 API
 export const getTouristImages = async (num) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/api/tourist-images`, 
-        {
-            params: { num }  // 가져오고자 하는 사진의 갯수 전달
-        });
+        const response = await axios.get(`${API_BASE_URL}/api/tourist-images`,
+            {
+                params: { num }  // 가져오고자 하는 사진의 갯수 전달
+            });
         console.log(response.data);  // 응답 데이터 확인
         return response.data;  // 성공 시 응답 데이터를 반환
     } catch (error) {
@@ -41,17 +41,18 @@ export const getLogOut = async (userId) => {
     }
 };
 
-export const getLogOut2 = async () => {
+export const getLogOut2 = async (token) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/user/logout`, {
-            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`  // Bearer 토큰 추가
+            }
         });
         return response.data;
     } catch (error) {
         throw error;
     }
 };
-
 export const registerUser = async ({ id, nickname, password, email }) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/register`, {
@@ -79,20 +80,39 @@ export const registerUser = async ({ id, nickname, password, email }) => {
 };
 
 // 현재 사용자
-export const currentUser = async () => {
+// export const currentUser = async () => {
+//     try {
+//         const response = await axios.get(`${API_BASE_URL}/user/me`, { withCredentials: true });
+//         console.log("currentUser", response.data);  // 현재 로그인한 사용자 정보 출력
+//         return response.data;  // 서버에서 받은 사용자 정보 반환
+//     } catch (error) {
+//         if (error.response && error.response.status === 401) {
+//             console.log('허가받지 않은 사용자');
+//             // 로그인 페이지로 리다이렉트하는 로직 추가
+//             //window.location.href = '/auth'; 
+//         }
+//     }
+// };
+
+export const getCurrentUser = async (token) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/user/me`, { withCredentials: true });
-        console.log("currentUser",response.data);  // 현재 로그인한 사용자 정보 출력
+        const response = await axios.get(`${API_BASE_URL}/user/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("현재 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
         return response.data;  // 서버에서 받은 사용자 정보 반환
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            console.log('허가받지 않은 사용자');
+            console.log('Unauthorized user');
             // 로그인 페이지로 리다이렉트하는 로직 추가
-            window.location.href = '/auth'; 
+            // window.location.href = '/auth';
+        } else {
+            console.error('Error fetching current user:', error);
         }
     }
 };
-
 // 랜덤 장소 추천 API
 export const getRandomPlaces = async () => {
     try {
@@ -158,39 +178,114 @@ export const getNearbyTouristInfo = async (coordinates) => {
 
 export const handleSearch = async (query, setResult) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/search/`, { query });
-      setResult(response.data); // 검색 결과 업데이트
+        const response = await axios.post(`${API_BASE_URL}/search/`, { query });
+        setResult(response.data); // 검색 결과 업데이트
     } catch (error) {
-      console.error('Error searching:', error);
+        console.error('Error searching:', error);
     }
 };
 
 export const handleAddFavorite = async (filename) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/favorites/`, { filename });
-      alert(response.data.message); // 성공 메시지 알림
+        const response = await axios.post(`${API_BASE_URL}/favorites/`, { filename });
+        alert(response.data.message); // 성공 메시지 알림
     } catch (error) {
-      console.error('Error adding favorite:', error);
+        console.error('Error adding favorite:', error);
     }
 };
 
 export const fetchFavorites = async (setFavorites) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/favorites/`);
-      setFavorites(response.data); // 즐겨찾기 목록 업데이트
+        const response = await axios.get(`${API_BASE_URL}/favorites/`);
+        setFavorites(response.data); // 즐겨찾기 목록 업데이트
     } catch (error) {
-      console.error('Error fetching favorites:', error);
+        console.error('Error fetching favorites:', error);
     }
 };
 
 export const fetchSearchHistory = async (setHistory) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/search/history/`);
-      setHistory(response.data); // 검색 기록 업데이트
+        const response = await axios.get(`${API_BASE_URL}/search/history/`);
+        setHistory(response.data); // 검색 기록 업데이트
     } catch (error) {
-      console.error('Error fetching search history:', error);
+        console.error('Error fetching search history:', error);
     }
 };
+
+export const addFavorite = async (place, token) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/record/favorites`, place, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            withCredentials: true,  // 세션 사용을 위한 옵션
+        });
+
+        console.log('Favorite added successfully:', response.data);
+    } catch (error) {
+        console.error('Failed to add favorite:', error);
+    }
+};
+
+export const getFavorites = async (token) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/record/favorites`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            withCredentials: true,  // 세션 사용을 위한 옵션
+        });
+
+        console.log('Favorites:', response.data.favorites);
+        return response.data.favorites;
+    } catch (error) {
+        console.error('Failed to fetch favorites:', error);
+    }
+};
+
+export const removeFavorite = async (place, token) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/record/favorites`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+            data: place,  // 삭제할 즐겨찾기 정보
+            withCredentials: true,  // 세션 사용을 위한 옵션
+        });
+
+        console.log('Favorite removed successfully:', response.data);
+    } catch (error) {
+        console.error('Failed to remove favorite:', error);
+    }
+};
+
+export const getSearchHistory = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/record/history`, {
+            withCredentials: true,  // 세션 사용을 위한 옵션
+        });
+
+        console.log('Search history:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch search history:', error);
+    }
+};
+
+// 사용 예시
+// getSearchHistory(token);
+
+// 사용 예시
+// const place = { name: 'Place Name', blur_image: 'image_url' };
+// removeFavorite(place, token);
+
+// 사용 예시
+// getFavorites(token);
+
+
+// 사용 예시
+// const place = { name: 'Place Name', blur_image: 'image_url', description: 'Some description' };
+// addFavorite(place, token);
 
 // import React, { useState, useEffect } from 'react';
 // import { handleSearch, handleAddFavorite, fetchFavorites, fetchSearchHistory } from './apiFunctions';

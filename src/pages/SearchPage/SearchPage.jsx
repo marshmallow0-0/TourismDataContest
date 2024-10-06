@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import KakaoMap from "./KakaoMap";
 import PublicDataMap from "../../components/PublicDataMap";
 import ImageGallery from "./ImageGallery";
-import SearchCarousel from "./SearchCarousel";
 import Info from "./Info";
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -12,6 +11,7 @@ import SearchListButtons from "./SearchListButtons";
 import axios from 'axios';
 import { getDetailPlace } from "../../api/api";
 import Accordion from "./Accordion";
+import SearchCarousel from "./SearchCarousel";
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 // 백엔드 서버 주소
