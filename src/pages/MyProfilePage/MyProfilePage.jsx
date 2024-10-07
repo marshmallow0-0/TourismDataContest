@@ -70,7 +70,8 @@ const MyProfilePage = () => {
     const fetchSearchHistory = async () => {
         try {
             const searchHistory = await getSearchHistory(token);  // 토큰을 사용하여 검색 기록 가져오기
-            const historyItems = searchHistory.history["qwer12's search_history"].history;  // 중첩된 구조에서 history 배열에 접근
+            const userid = user.id;
+            const historyItems = searchHistory.history[`${userid}'s search_history`].history;  // 중첩된 구조에서 history 배열에 접근
             setItems(historyItems);  // 검색 기록 상태 업데이트
 
             // 중첩된 구조에서 마지막 history 배열에 접근
@@ -88,6 +89,37 @@ const MyProfilePage = () => {
             getFavorites();
         }
     }, [user]);  // user가 변경될 때마다 실행
+
+    useEffect(() => {
+        console.log("즐겨찾기 상태 변경됨", favorites);
+    }, [favorites]);  // favorites가 변경될 때마다 실행
+
+    const deleteFavorite = async (place, token) => {
+        try {
+            const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/record/favorites`, {
+                data: {
+                    name: place.name,
+                    address: place.address,
+                    petsAvailable: place.petsAvailable,
+                    tel: place.tel,
+                    parking: place.parking,
+                    x: place.x,
+                    y: place.y,
+                    images: place.images,
+                    blur_image: place.blur_image,
+                },
+                withCredentials: true,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // 요청이 성공하면 결과를 처리합니다.
+            console.log('즐겨찾기에서 삭제되었습니다:', response.data);
+        } catch (error) {
+            // 에러가 발생하면 에러 처리
+            console.error('이미 삭제된 즐겨찾기입니다.');
+        }
+    };
 
     // 초기 즐겨찾기 목록 가져오기
     const getFavorites = async () => {
@@ -116,35 +148,35 @@ const MyProfilePage = () => {
 
     return (
         <BasicLayout>
-            <div className="max-w-7xl mx-auto p-6 bg-gray-50">
+            <div className="max-w-7xl mx-auto p-3 bg-gray-50 ">
                 {/* 통합된 프로필 헤더 */}
-                <header className="mb-12 text-center bg-gradient-to-r from-blue-500 to-indigo-600 p-8 rounded-lg shadow-lg">
-                    <div className="text-3xl font-bold text-white mb-10">myProfile</div>
+                <header className="mb-4 text-center bg-gradient-to-r from-blue-500 to-indigo-600 p-4 rounded-lg shadow-lg">
+                    <div className="text-2xl font-bold text-white mb-6">myProfile</div>
                     <div className="flex flex-col items-center md:flex-row md:items-start justify-center text-white">
                         {/* 프로필 이미지 */}
-                        <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden shadow-md border-4 border-white">
+                        <div className="w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shadow-md border-4 border-white">
                             <img src={userProfile} alt="Client" className="w-full h-full object-cover" />
                         </div>
 
                         {/* 프로필 세부 정보 */}
-                        <div className="md:ml-4 mt-6 md:mt-0 flex flex-col items-center md:items-start">
-                            <h2 className="text-3xl font-bold">{user.nickname}</h2>
-                            <p className="text-indigo-200 text-lg mt-2">{user.email}</p>
+                        <div className="md:ml-4 mt-4 md:mt-0 flex flex-col items-center md:items-start">
+                            <h2 className="text-2xl font-bold">{user.nickname}</h2>
+                            <p className="text-indigo-200 text-md mt-1">{user.email}</p>
 
-                            <div className="mt-6 flex space-x-10">
+                            <div className="mt-4 flex space-x-6">
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl font-semibold">{items.length}</span>
-                                    <span className="text-sm text-indigo-200">Search Logs</span>
+                                    <span className="text-xl font-semibold">{items.length}</span>
+                                    <span className="text-xs text-indigo-200">Search Logs</span>
                                 </div>
                                 <div className="flex flex-col items-center">
-                                    <span className="text-2xl font-semibold">{favorites.length}</span>
-                                    <span className="text-sm text-indigo-200">Bookmarks</span>
+                                    <span className="text-xl font-semibold">{favorites.length}</span>
+                                    <span className="text-xs text-indigo-200">Bookmarks</span>
                                 </div>
                             </div>
 
-                            <div className="mt-6 flex items-center space-x-2 text-green-500">
+                            <div className="mt-4 flex items-center space-x-1 text-green-500">
                                 <FaLandmark />
-                                <span className="text-lg font-semibold">관광하는 여행자</span>
+                                <span className="text-md font-semibold">관광하는 여행자</span>
                             </div>
                         </div>
                     </div>
@@ -152,16 +184,14 @@ const MyProfilePage = () => {
                     {/* 홈으로 가기 버튼 */}
                     <button
                         onClick={goToHome}
-                        className="mt-8 px-6 py-3 bg-white text-blue-500 font-semibold rounded-full shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-colors duration-300"
+                        className="mt-6 px-5 py-2 bg-white text-blue-500 font-semibold rounded-full shadow-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transition-colors duration-300"
                     >
                         홈으로
                     </button>
 
                     {/* 구분선 */}
-                    <div className="mt-6 border-t border-white opacity-40"></div>
+                    <div className="mt-4 border-t border-white opacity-40"></div>
                 </header>
-
-
 
 
                 {/* 검색 기록 이미지 */}
@@ -188,7 +218,9 @@ const MyProfilePage = () => {
                         <AccordionGallery
                             images={images}
                             favorites={favorites}
+                            deleteFavorite={deleteFavorite}  // 즐겨찾기 삭제 함수 전달
                             toggleFavorite={toggleFavorite}  // 즐겨찾기 토글 함수 전달
+                            token={token}  // 인증 토큰 전달
                         />
                     </div>
                 </div>
