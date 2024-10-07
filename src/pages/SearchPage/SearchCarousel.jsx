@@ -209,6 +209,7 @@ const FavoriteButton = styled.button`
 
 const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
   const [favorites, setFavorites] = useState({});  // 각 항목의 즐겨찾기 상태를 저장하는 객체
+  const [currentSlide, setCurrentSlide] = useState(0);  // 현재 슬라이드 인덱스 상태 추가
   const token = useSelector((state) => state.login?.token || null);
 
   // 초기 즐겨찾기 목록 가져오기
@@ -223,7 +224,6 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
       if (response.status === 200) {
         const favoritesList = response.data.favorites;
         if (Array.isArray(favoritesList)) {
-          // 응답받은 즐겨찾기 목록을 객체 형식으로 변환하여 상태 설정
           const favoritesObj = {};
           favoritesList.forEach(fav => {
             favoritesObj[fav.name] = true;
@@ -244,78 +244,115 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
   }, []);
 
   const toggleFavorite = async () => {
+    //   try {
+    //     const place = touristPlaces[currentSlide];  // index로 해당 place 찾기
+    //     // console.log("현재 장소", place);  // 클릭할 때마다 올바른 장소가 출력되는지 확인
+    //     const isFavorite = favorites[place.name];  // 해당 장소의 즐겨찾기 여부
+    //     // console.log("즐겨찾기 추가 장소", place.name);
+    //     if (isFavorite) {
+    //       // console.log("삭제");
+    //       // 즐겨찾기 해제 (DELETE 요청)
+    //       const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/record/favorites`, {
+    //         data: {
+    //           name: place.name,
+    //           address: place.address,
+    //           petsAvailable: place.petsAvailable,
+    //           tel: place.tel,
+    //           parking: place.parking,
+    //           x: place.x,
+    //           y: place.y,
+    //           images: place.images,
+    //           blur_image: place.blur_image,
+    //         },
+    //         withCredentials: true,
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       });
+
+    //       if (response.status === 200) {
+    //         // 해당 장소의 즐겨찾기 상태를 false로 업데이트
+    //         // console.log("삭제완료");
+    //         await getFavorites();  // getFavorites가 상태를 최신으로 갱신
+
+    //         setFavorites(prevFavorites => ({
+    //           ...prevFavorites,
+    //           [place.name]: false,
+    //         }));
+    //       }
+    //     } else {
+    //       // 즐겨찾기 추가 (POST 요청)
+    //       const response = await axios.post(
+    //         `${process.env.REACT_APP_BACKEND_URL}/record/favorites`,
+    //         {
+    //           name: place.name,
+    //           address: place.address,
+    //           petsAvailable: place.petsAvailable,
+    //           tel: place.tel,
+    //           parking: place.parking,
+    //           x: place.x,
+    //           y: place.y,
+    //           images: place.images,
+    //           blur_image: place.blur_image,
+    //         },
+    //         {
+    //           withCredentials: true,
+    //           headers: {
+    //             Authorization: `Bearer ${token}`,
+    //           },
+    //         }
+    //       );
+
+    //       if (response.status === 200) {
+    //         // 해당 장소의 즐겨찾기 상태를 true로 업데이트
+    //         setFavorites(prevFavorites => ({
+    //           ...prevFavorites,
+    //           [place.name]: true,
+    //         }));
+    //       }
+    //     }
+    //   } catch (error) {
+    //     if (error.response && error.response.status === 400 && error.response.data.detail === "Already added to favorites.") {
+    //       console.error('이미 즐겨찾기에 추가된 항목입니다.');
+    //     } else {
+    //       console.error('즐겨찾기 처리 중 오류 발생:', error);
+    //     }
+    //   }
+    // };
     try {
       const place = touristPlaces[currentSlide];  // index로 해당 place 찾기
-      // console.log("현재 장소", place);  // 클릭할 때마다 올바른 장소가 출력되는지 확인
-      const isFavorite = favorites[place.name];  // 해당 장소의 즐겨찾기 여부
-      console.log("즐겨찾기 추가 장소", place.name);
-      if (isFavorite) {
-        // 즐겨찾기 해제 (DELETE 요청)
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/record/favorites`, {
-          data: {
-            name: place.name,
-            address: place.address,
-            petsAvailable: place.petsAvailable,
-            tel: place.tel,
-            parking: place.parking,
-            x: place.x,
-            y: place.y,
-            images: place.images,
-            blur_image: place.blur_image,
-          },
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/record/favorites`,
+        {
+          name: place.name,
+          address: place.address,
+          petsAvailable: place.petsAvailable,
+          tel: place.tel,
+          parking: place.parking,
+          x: place.x,
+          y: place.y,
+          images: place.images,
+          blur_image: place.blur_image,
+        },
+        {
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-
-        if (response.status === 200) {
-          // 해당 장소의 즐겨찾기 상태를 false로 업데이트
-          setFavorites(prevFavorites => ({
-            ...prevFavorites,
-            [place.name]: false,
-          }));
         }
-      } else {
-        // 즐겨찾기 추가 (POST 요청)
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/record/favorites`,
-          {
-            name: place.name,
-            address: place.address,
-            petsAvailable: place.petsAvailable,
-            tel: place.tel,
-            parking: place.parking,
-            x: place.x,
-            y: place.y,
-            images: place.images,
-            blur_image: place.blur_image,
-          },
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      );
 
-        if (response.status === 200) {
-          // 해당 장소의 즐겨찾기 상태를 true로 업데이트
-          setFavorites(prevFavorites => ({
-            ...prevFavorites,
-            [place.name]: true,
-          }));
-        }
+      if (response.status === 200) {
+        await getFavorites();  // 즐겨찾기 목록 갱신
       }
     } catch (error) {
-      if (error.response && error.response.status === 400 && error.response.data.detail === "Already added to favorites.") {
-        console.error('이미 즐겨찾기에 추가된 항목입니다.');
+      if (error.response && error.response.status === 400) {
+        console.error("이미 즐겨찾기에 추가된 항목입니다.");
       } else {
-        console.error('즐겨찾기 처리 중 오류 발생:', error);
+        console.error("즐겨찾기 처리 중 오류 발생:", error);
       }
     }
   };
-  const [currentSlide, setCurrentSlide] = useState(0);  // 현재 슬라이드 인덱스 상태 추가
 
   const settings = {
     slide: "div",
@@ -330,7 +367,6 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
     autoplaySpeed: 10000,
     dotsClass: "slick-dots",
     arrows: false,
-    // afterChange: onSlideChange,
     afterChange: (current) => {
       setCurrentSlide(current);  // 슬라이드가 변경될 때 현재 슬라이드 인덱스 업데이트
     }
@@ -362,12 +398,12 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
                   {favorites[place.name] ? (
                     <>
                       <FaStar color="gold" style={{ marginRight: '8px' }} />
-                      즐겨찾기 삭제
+                      즐겨찾기
                     </>
                   ) : (
                     <>
                       <CiStar color="gray" style={{ marginRight: '8px' }} />
-                      즐겨찾기 추가
+                      즐겨찾기
                     </>
                   )}
                 </FavoriteButton>
@@ -387,3 +423,4 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
 };
 
 export default SearchCarousel;
+

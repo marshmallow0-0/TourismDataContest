@@ -22,11 +22,17 @@ export default function SearchPage() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const { jsonData, uploadedImage } = location.state || {}; // 데이터를 안전하게 추출
+    const { jsonData, uploadedImage } = location.state || {
+        jsonData: JSON.parse(localStorage.getItem('jsonData')),
+        uploadedImage: localStorage.getItem('uploadedImage'),
+    };
+
+
+
     // const uploadedImage = image || "https://via.placeholder.com/300";
-    console.log(2);
-    console.log(jsonData);
-    console.log("이미지 확인", uploadedImage); // 전달된 uploadedImage 확인
+    // console.log(2);
+    // console.log(jsonData);
+    // console.log("이미지 확인", uploadedImage); // 전달된 uploadedImage 확인
 
     // console.log(jsonData.similar_places);
 
@@ -51,26 +57,9 @@ export default function SearchPage() {
         navigate('/');
     };
 
-    const fetchDetail = async () => {
-        try {
-            const data = await getDetailPlace("seoul");
-            console.log("1");
-            console.log(data);
-            setDetail(data.data);
-        } catch (err) {
-            setError('실패');
-            console.error(err);
-        }
-    };
-
-    // 최초 로드 시 정보 가져오기
-    useEffect(() => {
-        fetchDetail();
-    }, []);
-
     // 카테고리 변경 핸들러
     const handleCategoryChange = (newCategory) => {
-        console.log("카테고리 변경됨:", newCategory);
+        // console.log("카테고리 변경됨:", newCategory);
         setCategory(newCategory);
 
         // 카테고리에 따라 buttonSelect 값 변경 (0: 기본, 1: 카페, 2: 음식점, 3: 관광지)
@@ -88,11 +77,11 @@ export default function SearchPage() {
     const handleSlideChange = (index) => {
         setSelectedResultIndex(index);
     };
-    console.log(3);
-    if (touristPlaces.length > 0) {
-        console.log(touristPlaces[0].x); // 배열의 첫 번째 요소가 존재할 때만 콘솔 출력
-    }
-    console.log(touristPlaces);
+    // console.log(3);
+    // if (touristPlaces.length > 0) {
+    //     console.log(touristPlaces[0].x); // 배열의 첫 번째 요소가 존재할 때만 콘솔 출력
+    // }
+    // console.log(touristPlaces);
 
     return (
         <BasicLayout>
