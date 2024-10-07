@@ -125,7 +125,7 @@ function Section({ user }) {
 
     const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
 
-    console.log("프로필 토큰확인2", token);
+    // console.log("프로필 토큰확인2", token);
 
     const navigate = useNavigate();
 
