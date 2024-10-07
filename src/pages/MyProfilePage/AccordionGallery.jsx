@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const AccordionGallery = ({ images, favorites, toggleFavorite }) => {
+const AccordionGallery = ({ images, favorites, toggleFavorite, deleteFavorite, token }) => {
     // 각 아코디언 항목의 열림 상태를 관리하는 배열
     const [activeIndices, setActiveIndices] = useState([]);
-
+    const [favorites2, setFavorites] = useState([]);
+    // favorites가 변경될 때마다 favorites2를 업데이트
+    useEffect(() => {
+        if (favorites) {
+            setFavorites(favorites);
+        }
+    }, [favorites]);  // favorites가 변경될 때만 실행
     // 아코디언 항목을 클릭했을 때, 해당 항목의 열림/닫힘 상태를 토글
     const handleAccordionClick = (index) => {
         if (activeIndices.includes(index)) {
@@ -15,11 +21,17 @@ const AccordionGallery = ({ images, favorites, toggleFavorite }) => {
         }
     };
 
+    // 즐겨찾기 삭제 후 상태 업데이트
+    const handleDelete = async (image) => {
+        await deleteFavorite(image, token);
+        setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.name !== image.name));
+    };
+
     return (
         <div className="flex space-x-4 overflow-x-auto">
-            {favorites.map((image, index) => {
+            {favorites2.map((image, index) => {
                 // 즐겨찾기 상태 확인
-                const isFavorited = favorites.some(fav => fav.name === image.name);
+                // const isFavorited = favorites2.some(fav => fav.name === image.name);
 
                 return (
                     <div
@@ -66,6 +78,17 @@ const AccordionGallery = ({ images, favorites, toggleFavorite }) => {
                                 <p className="text-sm font-semibold text-gray-700 mb-4">반려동물 가능 여부
                                     <span className="text-xs text-gray-900 font-medium block mt-1">{image.petsAvailable}</span>
                                 </p>
+                                <div className='flex justify-start'>
+                                    <button
+                                        className=" text-xs text-red-600 mt-2 px-2 py-2 rounded-full bg-red-200 hover:bg-red-300 transition-all"
+                                        onClick={() => {
+                                            handleDelete(image);  // 첫 번째 삭제 함수 호출
+                                            deleteFavorite(image, token);  // 두 번째 삭제 함수 호출
+                                        }} // 삭제 함수 호출
+                                    >
+                                        즐겨찾기 삭제
+                                    </button>
+                                </div>
 
                             </div>
                         )}
