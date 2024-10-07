@@ -16,9 +16,10 @@ export function tokenLoader() {
 export function checkAuthLoader() {
     const state = store.getState();  // Redux 스토어 상태를 가져옴
     const isAuthenticated = state.login.isAuthenticated;  // 로그인 여부 확인
+    const token = localStorage.getItem('token');  // localStorage에서 토큰 가져오기
 
     // 토큰이 없으면 인증 페이지로 리다이렉트
-    if (!isAuthenticated) {
+    if (!token) {
         return redirect("/auth");  // 인증되지 않았으면 로그인 페이지로 리다이렉트
     }
 
