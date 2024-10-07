@@ -350,6 +350,15 @@ const DragAndDropArea = ({
         return new File([u8arr], fileName, { type: mime });
     };
 
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);  // Base64 데이터가 여기 저장됨
+            reader.onerror = error => reject(error);
+        });
+    };
+
     // Ai 검색 버튼 클릭 시 이미지 전송 및 검색 수행
     const handleAiSearchClick = async () => {
         let imageToSend;
@@ -394,7 +403,11 @@ const DragAndDropArea = ({
                 );
 
                 console.log("Response from server: ", response.data);
+                // File 객체를 Base64로 변환
+                const base64Image = await convertToBase64(imageToSend);
 
+                localStorage.setItem('jsonData', JSON.stringify(response.data));
+                localStorage.setItem('uploadedImage', base64Image);
                 // 검색 결과 페이지로 이동하며 결과 데이터 전달
                 navigate('/search', { state: { jsonData: response.data, uploadedImage: URL.createObjectURL(imageToSend) } });
             } catch (error) {

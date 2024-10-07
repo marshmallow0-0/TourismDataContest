@@ -7,7 +7,9 @@ const MapCity = ({ cityId, name, rank, d, textPosition = { x: 380, y: 370 } }) =
 
     // 도시 클릭 시 toggleCity 호출
     const handleClick = () => {
+        console.log(`City clicked: ${name}, id: ${cityId}`); // 로그로 확인
         dispatch(checkboxActions.toggleCity({ cityName: name, value: cityId }));
+        
     };
 
     return (
