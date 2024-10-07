@@ -26,7 +26,7 @@ const root = createBrowserRouter([
         path: "/",
         element: <RootLayout />,
         id: 'root',
-        // loader: tokenLoader,
+        loader: tokenLoader,
         children: [
             {
                 index: true,
@@ -48,7 +48,7 @@ const root = createBrowserRouter([
                 path: "myprofile",
                 element: <Suspense fallback={Loading}><MyProfile /></Suspense>,
                 // WARNING 해제해야함
-                // loader: checkAuthLoader 
+                loader: checkAuthLoader 
             },
             // {
             //     path: "login",
@@ -82,7 +82,7 @@ const root = createBrowserRouter([
             {
                 path: "travelrecord",
                 element: <Suspense fallback={Loading}><MyTravelRecordsForm /></Suspense>,
-                // loader: checkAuthLoader
+                loader: checkAuthLoader
 
             }
         ],
