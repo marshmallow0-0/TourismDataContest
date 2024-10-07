@@ -43,7 +43,7 @@ export const getLogOut = async (userId) => {
 
 export const getLogOut2 = async (token) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/user/logout`, {
+        const response = await axios.post(`${API_BASE_URL}/user/logout`, {
             headers: {
                 Authorization: `Bearer ${token}`  // Bearer 토큰 추가
             }
@@ -259,19 +259,22 @@ export const removeFavorite = async (place, token) => {
     }
 };
 
-export const getSearchHistory = async () => {
+export const getSearchHistory = async (token) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/record/history`, {
             withCredentials: true,  // 세션 사용을 위한 옵션
+            headers: {
+                Authorization: `Bearer ${token}`,  // Bearer 토큰 추가
+            }
         });
 
         console.log('Search history:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch search history:', error);
+        throw error;
     }
 };
-
 // 사용 예시
 // getSearchHistory(token);
 
