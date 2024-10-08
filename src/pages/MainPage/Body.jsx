@@ -23,7 +23,7 @@ import Section from "./Section"
 import { useSelector } from "react-redux";
 
 import { useLocation } from 'react-router-dom';
-import { currentUser, getCurrentUser } from "../../api/api";
+import { currentUser, getCurrentUser, getKakaoUser } from "../../api/api";
 
 import { useDispatch } from 'react-redux';
 import { loginActions } from '../../store/loginSlice';
@@ -35,26 +35,6 @@ const MainBody = () => {
 
     const [kakaotoken, setToken] = useState(null); // token 상태 정의
 
-    useEffect(() => {
-        // URL 분석하기
-        const url = new URL(window.location.href);
-
-        // URLSearchParams 객체로 쿼리 파라미터 분석하기
-        const params = new URLSearchParams(url.search);
-
-        // 'token' 파라미터 추출하기
-        const tokenFromUrl = params.get('token');
-        console.log(params);
-        if (tokenFromUrl) {
-            // 추출한 token을 상태에 저장하기
-            setToken(tokenFromUrl);
-
-            dispatch(loginActions.login({ token: kakaotoken }));  // 사용자 정보를 Redux에 저장
-            // 필요 시 로컬 스토리지에 저장
-            localStorage.setItem('token', tokenFromUrl);
-            console.log(tokenFromUrl, "카카오 토큰")
-        }
-    }, []); // 컴포넌트가 마운트될 때 한 번만 실행
 
     const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
     console.log("토큰확인", token);
@@ -66,7 +46,60 @@ const MainBody = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        // URL에서 토큰 추출 (카카오 로그인 확인)
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        const tokenFromUrl = params.get('token');  // URL에서 'token' 파라미터 추출
 
+        if (tokenFromUrl) {
+            // 1. 카카오 로그인인 경우
+            console.log("카카오 로그인 토큰 감지됨:", tokenFromUrl);
+
+            // 추출한 token을 상태에 저장
+            setToken(tokenFromUrl);
+
+            // Redux에 토큰 저장 (카카오 토큰을 직접 전달)
+            dispatch(loginActions.login({ token: tokenFromUrl }));
+
+            // 로컬 스토리지에 저장
+            localStorage.setItem('token', tokenFromUrl);
+
+            // 카카오 사용자 정보 가져오기
+            getKakaoUser(tokenFromUrl)
+                .then(userData => {
+                    setUser(userData);
+                    console.log("카카오 사용자 정보:", userData);
+                })
+                .catch(error => {
+                    console.error("카카오 사용자 정보 불러오기 오류:", error);
+                });
+        } else if (isAuthenticated) {
+            // 2. 일반 로그인인 경우
+            // navigate로 전달된 사용자 정보가 없는 경우에만 실행
+            console.log("일반 로그인");
+
+            if (token) {
+                const fetchCurrentUser = async () => {
+                    try {
+                        const userData = await getCurrentUser(token);  // 서버에서 사용자 정보 가져오기
+                        setUser(userData);  // 사용자 정보 설정
+                    } catch (error) {
+                        if (error.response && error.response.status === 401) {
+                            console.log('User is not authenticated');
+                            setError('로그인이 필요합니다.');
+                            // navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
+                        } else {
+                            console.error('Error fetching user data:', error);
+                            setError('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+                        }
+                    }
+                };
+
+                fetchCurrentUser();
+            }
+        }
+    }, [dispatch, token, location]); // dispatch, token, location 의존성 추가
 
     // const checkLoginStatus = async () => {
     //     try {
@@ -89,28 +122,29 @@ const MainBody = () => {
     // }, []);
 
     // 컴포넌트가 마운트될 때 사용자 정보를 가져옴
-    useEffect(() => {
-        // 만약 navigate로 전달된 사용자 정보가 없다면, 서버에서 정보를 가져옵니다.
-        if (token) {
-            const fetchCurrentUser = async () => {
-                try {
-                    const userData = await getCurrentUser(token);  // 서버에서 사용자 정보 가져오기
-                    setUser(userData);  // 사용자 정보 설정
-                } catch (error) {
-                    if (error.response && error.response.status === 401) {
-                        console.log('User is not authenticated');
-                        setError('로그인이 필요합니다.');
-                        //navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
-                    } else {
-                        console.error('Error fetching user data:', error);
-                        setError('사용자 정보를 불러오는 중 오류가 발생했습니다.');
-                    }
-                }
-            };
 
-            fetchCurrentUser();
-        }
-    }, []);  // user가 없을 때만 실행되도록 설정
+    // useEffect(() => {
+    //     // 만약 navigate로 전달된 사용자 정보가 없다면, 서버에서 정보를 가져옵니다.
+    //     if (token) {
+    //         const fetchCurrentUser = async () => {
+    //             try {
+    //                 const userData = await getCurrentUser(token);  // 서버에서 사용자 정보 가져오기
+    //                 setUser(userData);  // 사용자 정보 설정
+    //             } catch (error) {
+    //                 if (error.response && error.response.status === 401) {
+    //                     console.log('User is not authenticated');
+    //                     setError('로그인이 필요합니다.');
+    //                     //navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
+    //                 } else {
+    //                     console.error('Error fetching user data:', error);
+    //                     setError('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+    //                 }
+    //             }
+    //         };
+
+    //         fetchCurrentUser();
+    //     }
+    // }, []);  // user가 없을 때만 실행되도록 설정
 
 
     const selectedCities = useSelector(state => state.checkbox.selectedCities);

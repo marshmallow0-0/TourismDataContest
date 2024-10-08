@@ -41,13 +41,15 @@ export const getLogOut = async (userId) => {
     }
 };
 
+
 export const getLogOut2 = async (token) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/user/logout`, {
-            headers: {
-                Authorization: `Bearer ${token}`  // Bearer 토큰 추가
-            }
-        });
+        const response = await axios.post(`${API_BASE_URL}/user/logout`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`  // Bearer 토큰 추가
+                }
+            });
         return response.data;
     } catch (error) {
         throw error;
@@ -102,6 +104,26 @@ export const getCurrentUser = async (token) => {
             }
         });
         console.log("현재 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
+        return response.data;  // 서버에서 받은 사용자 정보 반환
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            console.log('Unauthorized user');
+            // 로그인 페이지로 리다이렉트하는 로직 추가
+            // window.location.href = '/auth';
+        } else {
+            console.error('Error fetching current user:', error);
+        }
+    }
+};
+
+export const getKakaoUser = async (token) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/user/me/kakao`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log("현재 카카오 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
         return response.data;  // 서버에서 받은 사용자 정보 반환
     } catch (error) {
         if (error.response && error.response.status === 401) {
