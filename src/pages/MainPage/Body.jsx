@@ -33,6 +33,29 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 const MainBody = () => {
 
+    const [kakaotoken, setToken] = useState(null); // token 상태 정의
+
+    useEffect(() => {
+        // URL 분석하기
+        const url = new URL(window.location.href);
+
+        // URLSearchParams 객체로 쿼리 파라미터 분석하기
+        const params = new URLSearchParams(url.search);
+
+        // 'token' 파라미터 추출하기
+        const tokenFromUrl = params.get('token');
+        console.log(params);
+        if (tokenFromUrl) {
+            // 추출한 token을 상태에 저장하기
+            setToken(tokenFromUrl);
+
+            dispatch(loginActions.login({ token: kakaotoken }));  // 사용자 정보를 Redux에 저장
+            // 필요 시 로컬 스토리지에 저장
+            localStorage.setItem('token', tokenFromUrl);
+            console.log(tokenFromUrl, "카카오 토큰")
+        }
+    }, []); // 컴포넌트가 마운트될 때 한 번만 실행
+
     const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
     console.log("토큰확인", token);
     const location = useLocation();
