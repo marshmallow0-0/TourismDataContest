@@ -115,17 +115,25 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ModalExample from '../../components/Modal';
 import { getLogOut2 } from '../../api/api';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { loginActions } from '../../store/loginSlice';
+import { redirect } from "react-router-dom";
 
 function Section({ user }) {
+
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 관리
     const [modalIsOpen, setModalIsOpen] = useState(true); // 모달 상태 관리
     const [contentVisible, setContentVisible] = useState(false); // 콘텐츠 가시성 상태
 
-    const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
+    const dispatch = useDispatch();
 
+    const generalToken = useSelector((state) => state.login?.generalToken || null);
+    const kakaoToken = useSelector((state) => state.login?.kakaoToken || null);
     // console.log("프로필 토큰확인2", token);
+
+    // 둘 중 하나의 토큰을 사용 (일반 토큰이 우선, 없으면 카카오 토큰 사용)
+    const token = generalToken || kakaoToken;
+    console.log("사용할 토큰 확인:", token);
 
     const navigate = useNavigate();
 
@@ -137,16 +145,21 @@ function Section({ user }) {
     useEffect(() => {
         // 1초 동안 로딩 상태 유지 후 모달을 닫기
         setTimeout(() => {
+            setContentVisible(true); // 콘텐츠 표시
             setIsLoading(false); // 1초 후 로딩 상태 해제
             setModalIsOpen(false); // 모달 닫기
-            setContentVisible(true); // 콘텐츠 표시
-        }, 2000); // 2초 동안 로딩 유지
+        }, 3000); // 2초 동안 로딩 유지
     }, []); // 빈 배열로 useEffect가 한 번만 실행되도록 설정
+
+    // TokenExtractor 내부에서 token 상태 관리
+
 
     const handleLogout = async () => {
         try {
-            await getLogOut2(token);
-            console.log("logout!");
+            // await getLogOut2(token);
+            console.log("로그아웃!");
+            // navigate('/auth');
+            dispatch(loginActions.logout());
             navigate('/auth');
         } catch (error) {
             console.error('Error logging out:', error);

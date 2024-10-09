@@ -63,8 +63,14 @@ const MyProfilePage = () => {
     //     if (user && user.id) {
     //         handleHistory(); // user 정보가 있을 때만 실행
     //     }
-    // }, [user]); // user가 변경될 때마다 실행, 처음 로드될 때도 실행
-    const token = useSelector((state) => state.login?.token || null);
+    const generalToken = useSelector((state) => state.login?.generalToken || null);
+    const kakaoToken = useSelector((state) => state.login?.kakaoToken || null);
+    // console.log("프로필 토큰확인2", token);
+
+    // 둘 중 하나의 토큰을 사용 (일반 토큰이 우선, 없으면 카카오 토큰 사용)
+    const token = generalToken || kakaoToken;
+
+    console.log("사용할 토큰 확인:", token);
 
     // 검색 기록 API 호출하는 함수
     const fetchSearchHistory = async () => {

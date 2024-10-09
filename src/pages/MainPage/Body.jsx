@@ -36,11 +36,11 @@ const MainBody = () => {
     const [kakaotoken, setToken] = useState(null); // token 상태 정의
 
 
-    const token = useSelector((state) => state.login?.token || null);  // 토큰이 없을 때 null을 기본값으로 설정
-    console.log("토큰확인", token);
+    const generalToken = useSelector((state) => state.login?.generalToken || null);  // 토큰이 없을 때 null을 기본값으로 설정
+    console.log("일반토큰확인", generalToken);
     const location = useLocation();
-    const isAuthenticated = useSelector((state) => state.login.isAuthenticated);
-    console.log("로그인 여부 확인", isAuthenticated)
+    const isGeneralAuthenticated = useSelector((state) => state.login.isAuthenticated);
+    console.log("일반 로그인 여부 확인", isGeneralAuthenticated)
     const [user, setUser] = useState(location.state?.user || null);  // navigate로 받은 user 정보를 먼저 확인
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -48,25 +48,29 @@ const MainBody = () => {
 
     useEffect(() => {
         // URL에서 토큰 추출 (카카오 로그인 확인)
+        const generalToken = localStorage.getItem('generalToken');  // 저장된 토큰 확인
+        const kakaoToken = localStorage.getItem('kakaoToken');  // 카카오 로그인 토큰
+
         const url = new URL(window.location.href);
         const params = new URLSearchParams(url.search);
         const tokenFromUrl = params.get('token');  // URL에서 'token' 파라미터 추출
 
-        if (tokenFromUrl) {
+        if (kakaoToken || tokenFromUrl) {
+            const finalToken = kakaoToken || tokenFromUrl;
             // 1. 카카오 로그인인 경우
-            console.log("카카오 로그인 토큰 감지됨:", tokenFromUrl);
-
+            console.log("카카오 로그인 주소창에서 토큰 감지됨:", tokenFromUrl);
+            console.log("로컬 스토리지에서 카카오 토큰 감지됨:", kakaoToken);
             // 추출한 token을 상태에 저장
-            setToken(tokenFromUrl);
+            setToken(finalToken);
 
             // Redux에 토큰 저장 (카카오 토큰을 직접 전달)
-            dispatch(loginActions.login({ token: tokenFromUrl }));
+            dispatch(loginActions.loginWithKakaoToken({ kakaoToken: finalToken }));
 
             // 로컬 스토리지에 저장
-            localStorage.setItem('token', tokenFromUrl);
+            localStorage.setItem('kakaoToken', finalToken);
 
             // 카카오 사용자 정보 가져오기
-            getKakaoUser(tokenFromUrl)
+            getKakaoUser(finalToken)
                 .then(userData => {
                     setUser(userData);
                     console.log("카카오 사용자 정보:", userData);
@@ -74,15 +78,15 @@ const MainBody = () => {
                 .catch(error => {
                     console.error("카카오 사용자 정보 불러오기 오류:", error);
                 });
-        } else if (isAuthenticated) {
+        } else if (isGeneralAuthenticated) {
             // 2. 일반 로그인인 경우
             // navigate로 전달된 사용자 정보가 없는 경우에만 실행
             console.log("일반 로그인");
 
-            if (token) {
+            if (generalToken) {
                 const fetchCurrentUser = async () => {
                     try {
-                        const userData = await getCurrentUser(token);  // 서버에서 사용자 정보 가져오기
+                        const userData = await getCurrentUser(generalToken);  // 서버에서 사용자 정보 가져오기
                         setUser(userData);  // 사용자 정보 설정
                     } catch (error) {
                         if (error.response && error.response.status === 401) {
@@ -99,7 +103,7 @@ const MainBody = () => {
                 fetchCurrentUser();
             }
         }
-    }, [dispatch, token, location]); // dispatch, token, location 의존성 추가
+    }, [dispatch, generalToken, location]); // dispatch, token, location 의존성 추가
 
     // const checkLoginStatus = async () => {
     //     try {

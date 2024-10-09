@@ -104,12 +104,12 @@ const LoginPage = () => {
                     'Content-Type': 'multipart/form-data', // 헤더 설정
                 },
             });
-            const token = response.data.access_token;  // 서버에서 JWT 토큰을 반환
-            dispatch(loginActions.login({ token }));  // 사용자 정보를 Redux에 저장
+            const generalToken = response.data.access_token;  // 서버에서 JWT 토큰을 반환
+            dispatch(loginActions.loginWithGeneralToken({ token: generalToken }));
 
             setIsLoggedIn(true);  // 로그인 상태 변경
             console.log("로그인 반환값 확인", response)
-            console.log('로그인 성공', token);
+            console.log('로그인 성공', generalToken);
             // 로그인 성공 후 사용자 정보를 메인 페이지로 넘기면서 이동
             //navigate('/', { state: { token: token } });
             navigate('/');
