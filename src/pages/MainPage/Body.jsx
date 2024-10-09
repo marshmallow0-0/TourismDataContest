@@ -38,6 +38,8 @@ const MainBody = () => {
 
     const generalToken = useSelector((state) => state.login?.generalToken || null);  // 토큰이 없을 때 null을 기본값으로 설정
     console.log("일반토큰확인", generalToken);
+    const kakaoToken = useSelector((state) => state.login?.kakaoToken || null);  // 토큰이 없을 때 null을 기본값으로 설정
+    console.log("카카오토큰확인", kakaoToken);
     const location = useLocation();
     const isGeneralAuthenticated = useSelector((state) => state.login.isAuthenticated);
     console.log("일반 로그인 여부 확인", isGeneralAuthenticated)
@@ -64,7 +66,7 @@ const MainBody = () => {
             setToken(finalToken);
 
             // Redux에 토큰 저장 (카카오 토큰을 직접 전달)
-            dispatch(loginActions.loginWithKakaoToken({ kakaoToken: finalToken }));
+            dispatch(loginActions.loginWithKakaoToken({ token: finalToken }));
 
             // 로컬 스토리지에 저장
             localStorage.setItem('kakaoToken', finalToken);
