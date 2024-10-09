@@ -11,7 +11,7 @@ export const getTouristImages = async (num) => {
             {
                 params: { num }  // 가져오고자 하는 사진의 갯수 전달
             });
-        console.log(response.data);  // 응답 데이터 확인
+        // console.log(response.data);  // 응답 데이터 확인
         return response.data;  // 성공 시 응답 데이터를 반환
     } catch (error) {
         console.error('무작위 사진 가져오기 오류:', error.response ? error.response.data : error.message);
@@ -74,7 +74,7 @@ export const registerUser = async ({ id, nickname, password, email }) => {
         }
 
         const data = await response.json();
-        console.log('사용자 등록 성공:', data);
+        // console.log('사용자 등록 성공:', data);
         return data;
     } catch (error) {
         console.error('등록 실패', error);
@@ -103,11 +103,11 @@ export const getCurrentUser = async (token) => {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("현재 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
+        // console.log("현재 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
         return response.data;  // 서버에서 받은 사용자 정보 반환
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            console.log('Unauthorized user');
+            // console.log('Unauthorized user');
             // 로그인 페이지로 리다이렉트하는 로직 추가
             // window.location.href = '/auth';
         } else {
@@ -123,11 +123,11 @@ export const getKakaoUser = async (token) => {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("현재 카카오 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
+        // console.log("현재 카카오 유저 정보", response.data);  // 현재 로그인한 사용자 정보 출력
         return response.data;  // 서버에서 받은 사용자 정보 반환
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            console.log('Unauthorized user');
+            // console.log('Unauthorized user');
             // 로그인 페이지로 리다이렉트하는 로직 추가
             // window.location.href = '/auth';
         } else {
@@ -243,7 +243,7 @@ export const addFavorite = async (place, token) => {
             withCredentials: true,  // 세션 사용을 위한 옵션
         });
 
-        console.log('Favorite added successfully:', response.data);
+        // console.log('Favorite added successfully:', response.data);
     } catch (error) {
         console.error('Failed to add favorite:', error);
     }
@@ -258,7 +258,7 @@ export const getFavorites = async (token) => {
             withCredentials: true,  // 세션 사용을 위한 옵션
         });
 
-        console.log('Favorites:', response.data.favorites);
+        // console.log('Favorites:', response.data.favorites);
         return response.data.favorites;
     } catch (error) {
         console.error('Failed to fetch favorites:', error);
@@ -275,7 +275,7 @@ export const removeFavorite = async (place, token) => {
             withCredentials: true,  // 세션 사용을 위한 옵션
         });
 
-        console.log('Favorite removed successfully:', response.data);
+        // console.log('Favorite removed successfully:', response.data);
     } catch (error) {
         console.error('Failed to remove favorite:', error);
     }
@@ -290,51 +290,10 @@ export const getSearchHistory = async (token) => {
             }
         });
 
-        console.log('Search history:', response.data);
+        // console.log('Search history:', response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch search history:', error);
         throw error;
     }
 };
-// 사용 예시
-// getSearchHistory(token);
-
-// 사용 예시
-// const place = { name: 'Place Name', blur_image: 'image_url' };
-// removeFavorite(place, token);
-
-// 사용 예시
-// getFavorites(token);
-
-
-// 사용 예시
-// const place = { name: 'Place Name', blur_image: 'image_url', description: 'Some description' };
-// addFavorite(place, token);
-
-// import React, { useState, useEffect } from 'react';
-// import { handleSearch, handleAddFavorite, fetchFavorites, fetchSearchHistory } from './apiFunctions';
-
-// const MyComponent = () => {
-//   const [query, setQuery] = useState('');
-//   const [filename, setFilename] = useState('');
-//   const [result, setResult] = useState(null);
-//   const [favorites, setFavorites] = useState([]);
-//   const [history, setHistory] = useState([]);
-
-//   const onSearch = () => handleSearch(query, setResult);
-//   const onAddFavorite = () => handleAddFavorite(filename);
-//   const loadFavorites = () => fetchFavorites(setFavorites);
-//   const loadHistory = () => fetchSearchHistory(setHistory);
-
-//   useEffect(() => {
-//     loadFavorites();
-//     loadHistory();
-//   }, []);
-
-//   return (
-//     <div>
-//       {/* UI for Search, Favorites, and History */}
-//     </div>
-//   );
-// };

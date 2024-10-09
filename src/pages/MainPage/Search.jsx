@@ -120,6 +120,7 @@ export default function MainComponent({ token }) {
         reader.onload = function (e) {
             const img = document.createElement('img');
             img.src = e.target.result;
+            //WARNING 에러
             dispatch(imageActions.setUploadedImage(img));
             dispatch(imageActions.setImageFile(file));
             dispatch(imageActions.setImage(img.src));
@@ -152,7 +153,7 @@ export default function MainComponent({ token }) {
     };
 
 
-    console.log("ImageFile:1 ", imageFile);
+    // console.log("ImageFile:1 ", imageFile);
     // const handleButtonClick = () => {
     //     console.log("Button Clicked"); // 이 메시지가 출력되는지 확인
     //     console.log("ImageFile:2 ", imageFile); // ImageFile의 상태를 확인
