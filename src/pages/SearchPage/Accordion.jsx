@@ -28,11 +28,11 @@ export default function Accordion({ selectedTags, selectedCities }) {
                 </button>
 
                 {isCategoryOpen && (
-                    <div className="grid grid-cols-3 gap-1 w-1/2 mx-auto">
+                    <div className="grid grid-cols-3 gap-1 w-full mx-auto mb-4"> {/* mb-4 추가 */}
                         {selectedTags.map((tag) => (
                             <div
                                 key={tag}
-                                className="bg-lime-500 sm:text-xs text-white px-3 py-1 mb-4 rounded-full flex justify-center items-center text-xs md:text-sm transition-all duration-300 ease-in-out"
+                                className="bg-lime-500 sm:text-xs text-white px-2 py-1 mb-4 rounded-full flex justify-center items-center text-xs md:text-sm transition-all duration-300 ease-in-out"
                                 style={{ minWidth: '100px', maxWidth: '150px' }}  // 태그의 최소, 최대 너비 설정
                             >
                                 {tag}
@@ -50,11 +50,11 @@ export default function Accordion({ selectedTags, selectedCities }) {
                 </button>
 
                 {isCityOpen && (
-                    <div className="grid grid-cols-4 gap-3 w-1/2 mx-auto">
+                    <div className="grid grid-cols-3 gap-1 w-full mx-auto">
                         {selectedCities.map((city) => (
                             <div
                                 key={city}
-                                className="bg-indigo-500 sm:text-xs text-white px-3 py-1 rounded-full justify-center flex items-center text-xs md:text-sm transition-all duration-300 ease-in-out"
+                                className="bg-indigo-500 sm:text-xs text-white px-3 py-1 mb-4 rounded-full justify-center flex items-center text-xs md:text-sm transition-all duration-300 ease-in-out"
                                 style={{ minWidth: '100px', maxWidth: '150px' }}  // 태그의 최소, 최대 너비 설정
                             >
                                 {city}
@@ -64,6 +64,5 @@ export default function Accordion({ selectedTags, selectedCities }) {
                 )}
             </div>
         </div>
-
     );
 }

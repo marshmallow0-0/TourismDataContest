@@ -37,12 +37,12 @@ const MainBody = () => {
 
 
     const generalToken = useSelector((state) => state.login?.generalToken || null);  // 토큰이 없을 때 null을 기본값으로 설정
-    console.log("일반토큰확인", generalToken);
+    // console.log("일반토큰확인", generalToken);
     const kakaoToken = useSelector((state) => state.login?.kakaoToken || null);  // 토큰이 없을 때 null을 기본값으로 설정
-    console.log("카카오토큰확인", kakaoToken);
+    // console.log("카카오토큰확인", kakaoToken);
     const location = useLocation();
     const isGeneralAuthenticated = useSelector((state) => state.login.isAuthenticated);
-    console.log("일반 로그인 여부 확인", isGeneralAuthenticated)
+    // console.log("일반 로그인 여부 확인", isGeneralAuthenticated)
     const [user, setUser] = useState(location.state?.user || null);  // navigate로 받은 user 정보를 먼저 확인
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -60,8 +60,8 @@ const MainBody = () => {
         if (kakaoToken || tokenFromUrl) {
             const finalToken = kakaoToken || tokenFromUrl;
             // 1. 카카오 로그인인 경우
-            console.log("카카오 로그인 주소창에서 토큰 감지됨:", tokenFromUrl);
-            console.log("로컬 스토리지에서 카카오 토큰 감지됨:", kakaoToken);
+            // console.log("카카오 로그인 주소창에서 토큰 감지됨:", tokenFromUrl);
+            // console.log("로컬 스토리지에서 카카오 토큰 감지됨:", kakaoToken);
             // 추출한 token을 상태에 저장
             setToken(finalToken);
 
@@ -75,7 +75,7 @@ const MainBody = () => {
             getKakaoUser(finalToken)
                 .then(userData => {
                     setUser(userData);
-                    console.log("카카오 사용자 정보:", userData);
+                    // console.log("카카오 사용자 정보:", userData);
                 })
                 .catch(error => {
                     console.error("카카오 사용자 정보 불러오기 오류:", error);
@@ -83,7 +83,7 @@ const MainBody = () => {
         } else if (isGeneralAuthenticated) {
             // 2. 일반 로그인인 경우
             // navigate로 전달된 사용자 정보가 없는 경우에만 실행
-            console.log("일반 로그인");
+            // console.log("일반 로그인");
 
             if (generalToken) {
                 const fetchCurrentUser = async () => {
@@ -92,7 +92,7 @@ const MainBody = () => {
                         setUser(userData);  // 사용자 정보 설정
                     } catch (error) {
                         if (error.response && error.response.status === 401) {
-                            console.log('User is not authenticated');
+                            // console.log('User is not authenticated');
                             setError('로그인이 필요합니다.');
                             // navigate('/auth');  // 인증되지 않은 경우 로그인 페이지로 이동
                         } else {

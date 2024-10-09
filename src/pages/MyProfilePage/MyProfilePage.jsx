@@ -161,7 +161,7 @@ const MyProfilePage = () => {
                     <div className="flex flex-col items-center md:flex-row md:items-start justify-center text-white">
                         {/* 프로필 이미지 */}
                         <div className="w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shadow-md border-4 border-white">
-                            <img src={userProfile} alt="Client" className="w-full h-full object-cover" />
+                            <img src={user?.thumbnail_image_url || './img/logo.jpg'} alt="Client" className="w-full h-full object-cover" />
                         </div>
 
                         {/* 프로필 세부 정보 */}

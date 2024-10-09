@@ -93,6 +93,9 @@ const LoginPage = () => {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
+        console.log("자동 로그아웃!");
+        // navigate('/auth');
+        dispatch(loginActions.logout());
         const formData = new FormData();
         formData.append("username", Email);
         formData.append("password", Password);
@@ -123,6 +126,9 @@ const LoginPage = () => {
     const handleKakaoLogin = (event) => {
         try {
             event.preventDefault();
+            console.log("자동 로그아웃!");
+            // navigate('/auth');
+            dispatch(loginActions.logout());
             // window.location.href = 'http://localhost:8000/user/auth/kakao';  // 카카오 로그인 페이지로 리다이렉트
             window.location.href = `${API_BASE_URL}/user/auth/kakao`;  // 카카오 로그인 페이지로 리다이렉트
         } catch (error) {

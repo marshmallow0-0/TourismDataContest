@@ -210,7 +210,10 @@ const FavoriteButton = styled.button`
 const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
   const [favorites, setFavorites] = useState({});  // 각 항목의 즐겨찾기 상태를 저장하는 객체
   const [currentSlide, setCurrentSlide] = useState(0);  // 현재 슬라이드 인덱스 상태 추가
-  const token = useSelector((state) => state.login?.token || null);
+  const token = useSelector((state) => {
+    // 일반 로그인 토큰이 존재하면 반환하고, 그렇지 않으면 카카오 토큰을 반환
+    return state.login.generalToken || state.login.kakaoToken || null;
+  });
 
   // 초기 즐겨찾기 목록 가져오기
   const getFavorites = async () => {
