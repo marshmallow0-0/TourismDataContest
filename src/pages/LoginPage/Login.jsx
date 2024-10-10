@@ -188,7 +188,7 @@ const LoginPage = () => {
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email"></label>
                                 <input
                                     type="text"
-                                    placeholder='이메일'
+                                    placeholder='아이디 또는 이메일'
                                     id="email"
                                     name="email"
                                     value={Email}

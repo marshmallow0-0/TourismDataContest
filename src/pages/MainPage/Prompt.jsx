@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 // 전체 컴포넌트
-export default function ChatPrompt() {
+export default function ChatPrompt({ setUserText }) {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
 
@@ -11,7 +11,12 @@ export default function ChatPrompt() {
 
     const handleSubmit = () => {
         if (inputValue.trim() !== "") {
-            setMessages([...messages, inputValue]);
+            const updateMessages = [...messages, inputValue];  // inputValue를 포함한 새로운 배열 생성
+
+            setMessages(updateMessages);
+            // 부모 컴포넌트에 입력된 텍스트 전달
+            setUserText(updateMessages);
+            console.log("updateMessages", updateMessages);
             setInputValue(''); // 입력 후 초기화
         }
     };
@@ -19,6 +24,9 @@ export default function ChatPrompt() {
     const handleDelete = (indexToDelete) => {
         const updatedMessages = messages.filter((_, index) => index !== indexToDelete);
         setMessages(updatedMessages); // 상태 업데이트
+        setUserText(updatedMessages); // 상태 업데이트
+        console.log("updatedMessages", updatedMessages);
+
     };
 
     return (
