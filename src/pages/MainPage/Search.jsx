@@ -19,7 +19,10 @@ export default function MainComponent({ token }) {
 
     const [images, setImages] = useState([]); //api
     const [places, setPlaces] = useState([]); //api
-
+    const [userText, setUserText] = useState([]); // ChatPrompt에서 입력된 텍스트 상태
+    // useEffect(() => {
+    //     setUserText((prevUserText) => [...prevUserText, "seoul"]);
+    // }, []); // 빈 배열을 의존성 배열로 두면 컴포넌트가 처음 로드될 때만 실행됨
 
     // useEffect(() => {
     //     const fetchData = async () => {
@@ -345,7 +348,7 @@ export default function MainComponent({ token }) {
                     <div className="flex flex-col items-center bg-white flex-1 min-w-0 w-full md:w-auto">
                         <CheckBoxArea />
                         <div className="mt-8 w-full"> {/* 프롬프트와 체크박스 사이에 margin-top 추가 */}
-                            <Prompt />
+                            <Prompt setUserText={setUserText} />
                         </div>
 
                     </div>
@@ -378,6 +381,7 @@ export default function MainComponent({ token }) {
                 {/* 오른쪽 드래그 앤 드롭과 프롬프트 */}
                 <div className="w-full max-w-sm sm:max-w-md md:max-w-md ">
                     <DragAndDropArea
+                        userText={userText}
                         imageFile={imageFile}
                         uploadedImage={uploadedImage}
                         handleDrop={handleDrop}
