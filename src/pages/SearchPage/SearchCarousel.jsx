@@ -234,17 +234,19 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
           setFavorites(favoritesObj);
         }
       } else {
-        console.error('즐겨찾기 목록 불러오기 실패:', response.data.favorites);
+        // console.error('즐겨찾기 목록 불러오기 실패:', response.data.favorites);
       }
     } catch (error) {
-      console.error('즐겨찾기 목록 불러오는 중 오류 발생:', error);
+      // console.error('즐겨찾기 목록 불러오는 중 오류 발생:', error);
     }
   };
 
   // 컴포넌트 로드 시 즐겨찾기 목록 불러오기
   useEffect(() => {
-    getFavorites();
-  }, []);
+    if (token) {  // token이 있는 경우에만 실행
+      getFavorites();
+    }
+  }, [token]);  // token이 변경될 때마다 실행되도록 추가
 
   const toggleFavorite = async () => {
     //   try {
@@ -323,6 +325,10 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
     //   }
     // };
     try {
+      if (!token) {
+        console.error("토큰이 없습니다. 요청을 실행할 수 없습니다.");
+        return;  // 토큰이 없으면 함수 종료
+      }
       const place = touristPlaces[currentSlide];  // index로 해당 place 찾기
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/record/favorites`,
@@ -345,14 +351,14 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 && token && token.trim() !== '') {
         await getFavorites();  // 즐겨찾기 목록 갱신
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        console.error("이미 즐겨찾기에 추가된 항목입니다.");
+        // console.error("이미 즐겨찾기에 추가된 항목입니다.");
       } else {
-        console.error("즐겨찾기 처리 중 오류 발생:", error);
+        // console.error("즐겨찾기 처리 중 오류 발생:", error);
       }
     }
   };
@@ -394,22 +400,24 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
                 <SlideAddress>주차: {place.parking}</SlideAddress>
                 <SlideHours>반려동물: {place.petsAvailable}</SlideHours>
                 {/* 아이콘과 텍스트를 버튼에 한 줄로 나란히 배치 */}
-                <FavoriteButton
-                  onClick={toggleFavorite}  // 이제 index를 따로 전달하지 않아도 됨
-                  isFavorited={!!favorites[touristPlaces[currentSlide]?.name]}  // 현재 슬라이드에 맞는 즐겨찾기 여부 확인
-                >
-                  {favorites[place.name] ? (
-                    <>
-                      <FaStar color="gold" style={{ marginRight: '8px' }} />
-                      즐겨찾기
-                    </>
-                  ) : (
-                    <>
-                      <CiStar color="gray" style={{ marginRight: '8px' }} />
-                      즐겨찾기
-                    </>
-                  )}
-                </FavoriteButton>
+                {token && (
+                  <FavoriteButton
+                    onClick={toggleFavorite}  // 이제 index를 따로 전달하지 않아도 됨
+                    isFavorited={!!favorites[touristPlaces[currentSlide]?.name]}  // 현재 슬라이드에 맞는 즐겨찾기 여부 확인
+                  >
+                    {favorites[place.name] ? (
+                      <>
+                        <FaStar color="gold" style={{ marginRight: '8px' }} />
+                        즐겨찾기
+                      </>
+                    ) : (
+                      <>
+                        <CiStar color="gray" style={{ marginRight: '8px' }} />
+                        즐겨찾기
+                      </>
+                    )}
+                  </FavoriteButton>
+                )}
               </InfoContainer>
             </SlideContent>
           </div>

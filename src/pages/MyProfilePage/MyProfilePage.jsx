@@ -14,7 +14,7 @@ const MyProfilePage = () => {
 
     const location = useLocation();
     const { user } = location.state || {};  // 전달된 user 정보
-    console.log("프로필에서의 유저정보 확인", user);
+    // console.log("프로필에서의 유저정보 확인", user);
     // 초기 데이터
     // const initialItems = [
     //     { id: 1, name: '강원도', date: '2023-09-15', imgUrl: 'https://cdn.pixabay.com/photo/2023/09/14/16/17/paddle-boat-8253274_1280.jpg' },
@@ -70,7 +70,7 @@ const MyProfilePage = () => {
     // 둘 중 하나의 토큰을 사용 (일반 토큰이 우선, 없으면 카카오 토큰 사용)
     const token = generalToken || kakaoToken;
 
-    console.log("사용할 토큰 확인:", token);
+    // console.log("사용할 토큰 확인:", token);
 
     // 검색 기록 API 호출하는 함수
     const fetchSearchHistory = async () => {
@@ -81,7 +81,7 @@ const MyProfilePage = () => {
             setItems(historyItems);  // 검색 기록 상태 업데이트
 
             // 중첩된 구조에서 마지막 history 배열에 접근
-            console.log('Search history:', historyItems);
+            // console.log('Search history:', historyItems);
             // return searchHistory;  // 마지막 history 배열 반환
         } catch (error) {
             console.error("Error fetching search history:", error);
@@ -97,7 +97,7 @@ const MyProfilePage = () => {
     }, [user]);  // user가 변경될 때마다 실행
 
     useEffect(() => {
-        console.log("즐겨찾기 상태 변경됨", favorites);
+        // console.log("즐겨찾기 상태 변경됨", favorites);
     }, [favorites]);  // favorites가 변경될 때마다 실행
 
     const deleteFavorite = async (place, token) => {
@@ -138,7 +138,7 @@ const MyProfilePage = () => {
             });
             if (response.status === 200) {
                 const favoritesList = response.data.favorites;
-                console.log("즐겨찾기 확인", favoritesList);
+                // console.log("즐겨찾기 확인", favoritesList);
                 setFavorites(favoritesList);  // favorites 배열 상태로 설정
             } else {
                 console.error('즐겨찾기 목록 불러오기 실패:', response.data.favorites);
