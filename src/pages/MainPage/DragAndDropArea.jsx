@@ -4,9 +4,9 @@ import 'cropperjs/dist/cropper.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
 import { useDispatch, useSelector } from 'react-redux';
 import { checkboxActions } from '../../store/checkboxSlice';
+import Loading from '../../components/Loading';
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 
@@ -45,7 +45,8 @@ const DragAndDropArea = ({
     buttonVisible,
     isImageUploaded,
     modalIsOpen,
-    token
+    token,
+    userText
 }) => {
     const dispatch = useDispatch();
 
@@ -191,17 +192,20 @@ const DragAndDropArea = ({
             ? `${API_BASE_URL}/ai/find-similar-image/auth/`  // 로그인된 경우
             : `${API_BASE_URL}/ai/find-similar-image`;      // 비로그인 경우
 
+        const userTextString = userText.length > 0 ? userText.join(',') : 'seoul';
+
 
         if (imageToSend) {
             const formData = new FormData();
             formData.append('user_image', imageToSend);  // 업로드할 이미지
-
+            // console.log("1", userText);
+            // console.log(userTextString);
             try {
                 setLoading(true);  // 로딩 상태 활성화
-
+                console.log("userText 전송", userTextString);
                 // 쿼리 파라미터로 전송될 값 설정
                 const params = {
-                    user_text: "seoul",  // 텍스트 필드
+                    user_text: userTextString,  // 텍스트 필드
                     region_ids: regionIdsString,  // 쉼표로 구분된 지역 ID들
                     category_ids: categoryIdsString,  // 쉼표로 구분된 카테고리 ID들
                     top_N: 5  // 상위 N개의 결과 (기본값 5)
@@ -256,7 +260,8 @@ const DragAndDropArea = ({
                                     onClick={handleAiSearchClick}
                                     disabled={loading} // 로딩 중일 때 버튼 비활성화
                                 >
-                                    {loading ? 'Searching...' : '검색하기'}
+                                    {/* <Loading /> */}
+                                    {loading ? <Loading /> : '검색하기'}
                                 </button>
 
                                 <button
