@@ -8,6 +8,7 @@ import { CiStar } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { FaPhoneAlt, FaMapMarkerAlt, FaParking, FaPaw } from "react-icons/fa";
 
 const StyledSlider = styled(Slider)`
   .slick-list {
@@ -17,19 +18,19 @@ const StyledSlider = styled(Slider)`
 
   .slick-dots {
     position: relative;
-    bottom: -9em;
-    
+    bottom: -9em;  // Dots 위치를 조금 더 위로 이동
     li button:before {
-      color: gray;
+      color: lightgray;
+      font-size: 0.9rem; // Dots 크기 확대
     }
     li.slick-active button:before {
-      color: black;
+      color: #FFAE00;  // 활성화된 Dot의 색상 변경
     }
   }
 
-  @media (max-width: 768px) { /* 화면 크기가 768px 이하일 때 적용 */
+  @media (max-width: 768px) {
     .slick-dots {
-      bottom: -17em; /* 모바일에서 bottom 값 조정 */
+      bottom: -20em;  // 모바일에서 Dots 위치 조정
     }
   }
 `;
@@ -40,20 +41,26 @@ const SlideContent = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  text-align: left;
   background-color: white;
-  border-radius: 12px;
-  padding: 20px;
-  overflow: hidden;
+  border-radius: 16px;  // 둥근 모서리
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
 
+
+  @media (max-width: 768px) {
+    flex-direction: column;  // 모바일에서는 수직 레이아웃
+    text-align: start;
+  }
 `;
+
 const ImageContainer = styled.div`
   flex: 1;
-  padding: 10px;
-  
-  @media (max-width: 768px) { /* 모바일에서 이미지 크기 조정 */
-    padding: 0;
-    max-width: 200px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    max-width: 240px;  // 모바일에서 이미지 크기 제한
   }
 `;
 
@@ -61,149 +68,152 @@ const Image = styled.img`
   width: 100%;
   height: auto;
   max-width: 300px;
-  max-height: 200px;
-  border-radius: 8px;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
 
-  @media (max-width: 768px) { /* 모바일 화면에서는 이미지 크기 줄이기 */
+  @media (max-width: 768px) {
     max-width: 200px;
-    max-height: 200px;
   }
 `;
+
 const InfoContainer = styled.div`
+  flex: 1;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex: 1;
-  padding: 10px;
 
-  @media (max-width: 768px) { /* 모바일 화면에서 텍스트 중간 정렬 */
-    text-align: center;
-    padding: 0;
+  @media (max-width: 768px) {
+    align-items: start;
   }
 `;
 
 const SlideTitle = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.75rem;  // 타이틀 크기 키움
   font-weight: bold;
   color: #312E81;
-  margin: 0;
+  margin-bottom: 12px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const SlideSubtitle = styled.p`
-  margin: 5px 0;
-  color: #666;
+
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 8px;
 `;
 
 const SlideLocation = styled.p`
-  margin: 5px 0;
-  color: #333;
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 8px;
 `;
 
 const SlideAddress = styled.p`
-  margin: 5px 0;
+  font-size: 1rem;
   color: #666;
+  margin-bottom: 8px;
 `;
 
 const SlideHours = styled.p`
-  margin: 5px 0;
-  color: #333;
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 8px;
 `;
 
 const SlidePhone = styled.p`
-  margin: 5px 0;
-  color: #333;
+  font-size: 1rem;
+  color: #888;
 `;
 
 const IconContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 15px;
   padding: 10px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const Icon = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: white;
-  padding: 0.5rem;
+  padding: 0.7rem;
   border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  font-size: 1rem;
-  font-weight: bold;
-  color: #1d72b8;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  font-size: 1.25rem;
+  color: #FFAE00;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-evenly;
-  margin-top: 20px;
-  border-top: 3px solid gray;
-  width: 100%;
+  justify-content: space-around;
+  padding: 15px 0;
+  border-top: 1px solid #ddd;
 
-  @media (max-width: 768px) { /* 모바일 화면에서는 버튼 크기 줄이기 */
-    flex-direction: column;
+  @media (max-width: 768px) {
+    gap: 12px;
     align-items: center;
-    gap: 10px;
+    flex-direction: column;  // 모바일에서는 수직 레이아웃
   }
 `;
 
 const Button = styled.button`
   background-color: white;
-  color: gray;
-  padding: 20px 20px;
-  border-right: 3px solid gray;
+  color: #666;
+  padding: 15px 25px;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background-color: #dcdcdc;
+    background-color: #f5f5f5;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  &:last-child {
-    border-right: none;
-  }
+  @media (max-width: 768px) {
+    padding: 12px 20px;
+    font-size: 0.5rem;
 
-  @media (max-width: 768px) { /* 모바일에서 버튼의 패딩과 폰트 크기 조정 */
-    padding: 10px;
-    font-size: 0.9rem;
-    border-right: none;
-    width: 100%;
   }
 `;
 
+
 const FavoriteButton = styled.button`
-  background-color: #f8f9fa; /* 약간 밝은 배경 */
-  border: 1px solid #ddd; /* 얇은 경계선 */
-  border-radius: 8px; /* 부드러운 모서리 */
-  padding: 8px 12px; /* 적당한 패딩 */
-  font-size: 1rem; /* 글씨 크기 조정 */
-  color: ${props => (props.isFavorited ? '#ff6b6b' : '#666')}; /* 색상 조정 */
-  display: inline-flex; /* 아이콘과 텍스트를 수평으로 정렬 */
-  align-items: center; /* 아이콘과 텍스트를 세로 중앙 정렬 */
+  background-color: #ffffff; /* 밝고 깨끗한 배경 */
+  border: 2px solid ${props => (props.isFavorited ? '#ff6b6b' : '#ddd')}; /* 선택된 경우 경계선 강조 */
+  border-radius: 50px; /* 더 부드러운, 캡슐형 모서리 */
+  padding: 10px 18px; /* 패딩을 더 넉넉하게 */
+  font-size: 1rem;
+  color: ${props => (props.isFavorited ? '#ff6b6b' : '#666')}; /* 즐겨찾기 여부에 따른 색상 */
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 효과 */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 효과 */
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* 부드러운 효과 */
 
   &:hover {
-    background-color: #f1f3f5; /* 마우스 오버 시 배경색 변경 */
+    background-color: #f9fafb; /* 마우스 오버 시 배경색 */
     color: #ff6b6b; /* 마우스 오버 시 색상 변경 */
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15); /* 마우스 오버 시 그림자 강화 */
   }
 
   svg {
-    margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 */
-    font-size: 1.2rem; /* 아이콘 크기 조정 */
+    margin-right: 10px; /* 아이콘과 텍스트 사이의 간격 */
+    font-size: 1.4rem; /* 아이콘 크기 조금 더 크게 */
   }
 `;
 
@@ -372,17 +382,18 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
     draggable: true,
     fade: true,
     dots: true,
-    autoplay: true,
-    autoplaySpeed: 10000,
+    autoplay: false,
+    autoplaySpeed: 20000,
     dotsClass: "slick-dots",
     arrows: false,
     afterChange: (current) => {
+      onSlideChange(current);
       setCurrentSlide(current);  // 슬라이드가 변경될 때 현재 슬라이드 인덱스 업데이트
     }
   };
 
   return (
-    <div className="mt-20 mb-20 p-5 mx-auto max-w-2xl text-center border-4 border-gray-400">
+    <div className="mt-20 mb-10 p-20 mx-auto max-w-2xl text-center border-2 border-gray-700 rounded-full">
       <StyledSlider {...settings}>
         {touristPlaces.map((place, index) => (
           <div key={index} className="w-full h-full relative">
@@ -395,10 +406,10 @@ const SearchCarousel = ({ onCategoryChange, touristPlaces, onSlideChange }) => {
                 />
               </ImageContainer>
               <InfoContainer>
-                <SlideSubtitle>전화번호: {place.tel}</SlideSubtitle>
-                <SlideLocation>위치: {place.address}</SlideLocation>
-                <SlideAddress>주차: {place.parking}</SlideAddress>
-                <SlideHours>반려동물: {place.petsAvailable}</SlideHours>
+                <SlideSubtitle>  <FaPhoneAlt /> {place.tel}</SlideSubtitle>
+                <SlideLocation> <FaMapMarkerAlt /> {place.address}</SlideLocation>
+                <SlideAddress><FaParking /> {place.parking}</SlideAddress>
+                <SlideHours> <FaPaw /> {place.petsAvailable}</SlideHours>
                 {/* 아이콘과 텍스트를 버튼에 한 줄로 나란히 배치 */}
                 {token && (
                   <FavoriteButton
