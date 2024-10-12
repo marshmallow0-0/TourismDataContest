@@ -10,7 +10,7 @@ const Info = ({ buttonSelect, locationAddress }) => {
     };
 
     const texts = {
-        0: `"${locationAddress}"의 정보입니다.`,
+        0: `"${locationAddress}"의 추천 여행코스입니다.`,
         1: `"${locationAddress}"의 주변 카페 정보입니다.`,
         2: `"${locationAddress}"의 주변 음식점 정보입니다.`,
         3: `"${locationAddress}"의 주변 관광지 정보입니다.`
