@@ -68,166 +68,123 @@ const KakaoMap = ({ mapx, mapy, category }) => {
             };
 
             const createOverlayContent = (place, category) => {
+                // 최상위 컨테이너인 content를 생성
                 const content = document.createElement('div');
-                content.className = 'wrap';
-                // content.style.position = 'absolute';
-                content.style.width = '288px';
-                content.style.height = '132px';
-                content.style.marginLeft = '-144px';
-                content.style.textAlign = 'left';
-                content.style.fontSize = '12px';
-                content.style.lineHeight = '1.5';
+                content.className = 'overlay-wrap'; // 클래스 이름 설정
+                content.style.width = '300px'; // 너비 설정
+                content.style.height = '120px'; // 높이 설정
+                content.style.marginLeft = '-150px'; // 중앙 정렬을 위해 너비의 절반만큼 왼쪽으로 이동
+                content.style.fontSize = '14px'; // 기본 폰트 크기 설정
+                content.style.lineHeight = '1.5'; // 줄 간격 설정
+                content.style.borderRadius = '12px'; // 모서리를 둥글게 설정
+                content.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)'; // 그림자 설정으로 약간의 깊이감을 추가
+                content.style.backgroundColor = '#fff'; // 배경색을 흰색으로 설정
 
+                // 내부 정보가 들어갈 infoDiv 생성
                 const infoDiv = document.createElement('div');
-                infoDiv.className = 'info';
-                infoDiv.style.width = '286px';
-                infoDiv.style.height = '100px';
-                infoDiv.style.borderRadius = '15px';
-                infoDiv.style.boxShadow = '0px 1px 2px #888';
-                infoDiv.style.borderBottom = '2px solid #ccc';
-                infoDiv.style.borderRight = '1px solid #ccc';
-                infoDiv.style.background = '#fff';
-                infoDiv.style.position = 'relative';
+                infoDiv.className = 'overlay-info'; // 클래스 이름 설정
+                infoDiv.style.padding = '10px'; // 내부 패딩 설정
+                infoDiv.style.borderRadius = '12px'; // 모서리를 둥글게 설정
+                infoDiv.style.borderBottom = '1px solid #ddd'; // 하단에 테두리 추가
+                infoDiv.style.position = 'relative'; // 닫기 버튼 등 위치 설정을 위해 상대적 위치 지정
 
-                // 카테고리별 타이틀 색상
+                // 카테고리별 배경 색상과 아이콘 설정을 위한 타이틀 컨테이너 titleDiv 생성
                 const titleDiv = document.createElement('div');
-                titleDiv.className = 'title';
-                titleDiv.style.padding = '5px 0 0 10px';
-                titleDiv.style.fontWeight = 'bold';
-                titleDiv.style.zIndex = '10';
-                titleDiv.style.height = '20px';
-                titleDiv.style.background = 'rgba(200, 200, 200, 1)'; // 검정색 배경
+                titleDiv.className = 'overlay-title'; // 클래스 이름 설정
+                titleDiv.style.padding = '5px 10px'; // 내부 패딩 설정
+                titleDiv.style.fontWeight = 'bold'; // 글자를 굵게 설정
+                titleDiv.style.fontSize = '16px'; // 폰트 크기 설정
+                titleDiv.style.color = '#333'; // 글자 색상 설정
+                titleDiv.style.display = 'flex'; // 플렉스박스 사용으로 아이템 정렬
+                titleDiv.style.alignItems = 'center'; // 세로 중앙 정렬
+                titleDiv.style.justifyContent = 'space-between'; // 좌우로 아이템 분배
+                titleDiv.style.borderRadius = '8px'; // 타이틀 영역의 모서리 둥글게 설정
+                titleDiv.style.background = 'rgba(200, 200, 200, 0.2)'; // 기본 배경색 설정
 
-
-                if (category === 'CE7') { // 카페
+                // 카테고리별 색상과 아이콘 적용 (카페, 음식점, 관광지에 맞는 스타일 적용)
+                const icon = document.createElement('span');
+                if (category === 'CE7') { // 카페인 경우
+                    console.log(category);
                     titleDiv.style.background = 'rgba(254, 243, 199, 1)'; // 카페 배경색
-                    const icon = document.createElement('span');
-                    icon.textContent = '☕ ';
-                    const link = document.createElement('a');
-                    link.href = place.place_url;
-                    link.textContent = place.place_name;
-                    link.style.color = 'blue';
-                    titleDiv.appendChild(icon);
-                    titleDiv.appendChild(link);
-                } else if (category === 'FD6') { // 음식점
+                    icon.textContent = '☕ '; // 카페 아이콘
+                } else if (category === 'FD6') { // 음식점인 경우
+                    console.log(category);
                     titleDiv.style.background = 'rgba(254, 81, 106, 1)'; // 음식점 배경색
-                    const icon = document.createElement('span');
-                    icon.textContent = '🍚 ';
-                    const link = document.createElement('a');
-                    link.href = place.place_url;
-                    link.textContent = place.place_name;
-                    link.style.color = 'blue';
-                    titleDiv.appendChild(icon);
-                    titleDiv.appendChild(link);
-                } else if (category === 'AT4') { // 관광지
+                    icon.textContent = '🍚 '; // 음식점 아이콘
+                } else if (category === 'AT4') { // 관광지인 경우
                     titleDiv.style.background = 'rgba(81, 106, 254, 1)'; // 관광지 배경색
-                    const icon = document.createElement('span');
-                    icon.textContent = '⛱️ ';
-                    const link = document.createElement('a');
-                    link.href = place.place_url;
-                    link.textContent = place.place_name;
-                    link.style.color = 'blue';
-                    titleDiv.appendChild(icon);
-                    titleDiv.appendChild(link);
+                    icon.textContent = '⛱️ '; // 관광지 아이콘
                 }
 
-                // 닫기 버튼
-                const closeButton = document.createElement('div');
-                closeButton.className = 'close';
-                closeButton.textContent = 'X';
-                closeButton.style.position = 'absolute';
-                closeButton.style.top = '4px';
-                closeButton.style.right = '10px';
-                closeButton.style.cursor = 'pointer';
-                closeButton.style.color = '#888';
+                // 장소 이름을 클릭하면 해당 장소의 카카오맵 페이지로 이동하도록 설정된 링크 생성
+                const link = document.createElement('a');
+                link.href = place.place_url; // 장소의 상세 페이지 URL
+                link.textContent = place.place_name; // 장소 이름 텍스트 설정
+                link.style.color = '#312E81'; // 링크 색상을 파란색으로 설정
+                link.style.textDecoration = 'none'; // 밑줄 제거
+                link.style.fontWeight = 'bold'; // 링크 글씨 굵게 설정
+                // 링크를 새 창에서 열도록 설정 (보안 설정 포함)
+                link.target = '_blank';
 
-                // 닫기 버튼 클릭 시 오버레이 숨기기 또는 제거
+                // 닫기 버튼 생성 (X 버튼)
+                const closeButton = document.createElement('button');
+                closeButton.textContent = '✕'; // X 아이콘
+                closeButton.style.border = 'none'; // 테두리 제거
+                closeButton.style.background = 'transparent'; // 배경색 투명하게 설정
+                closeButton.style.fontSize = '16px'; // 폰트 크기 설정
+                closeButton.style.cursor = 'pointer'; // 커서를 클릭 가능한 형태로 변경
+                closeButton.style.color = '#888'; // 닫기 버튼의 색상 설정
+
+                // 닫기 버튼 클릭 시 오버레이를 닫도록 이벤트 추가
                 closeButton.addEventListener('click', () => {
-                    content.style.display = 'none';
+                    content.style.display = 'none'; // 오버레이를 숨김
                 });
 
-                titleDiv.appendChild(closeButton);
-                infoDiv.appendChild(titleDiv);
+                // 타이틀 구성: 아이콘, 링크, 닫기 버튼을 타이틀에 추가
+                titleDiv.appendChild(icon); // 카테고리 아이콘 추가
+                titleDiv.appendChild(link); // 장소 이름 링크 추가
+                titleDiv.appendChild(closeButton); // 닫기 버튼 추가
+                infoDiv.appendChild(titleDiv); // 타이틀을 정보 디브에 추가
 
-                // 이미지 추가
-                // const imgDiv = document.createElement('div');
-                // imgDiv.className = 'img';
-                // imgDiv.style.position = 'absolute';
-                // imgDiv.style.top = '20px';
-                // imgDiv.style.left = '5px';
-                // imgDiv.style.width = '73px';
-                // imgDiv.style.height = '60px';
-                // imgDiv.style.borderRadius = '15px';
-                // imgDiv.style.border = '1px solid #ddd';
-                // imgDiv.style.overflow = 'hidden';
-
-                // const img = document.createElement('img');
-                // img.style.width = '73px';
-                // img.style.height = '60px';
-
-                // // 이미지 소스 설정
-                // if (category === 'CE7') {
-                //     img.src = './img/cafe_icon.png';
-                // } else if (category === 'FD6') {
-                //     img.src = './img/food_icon.png';
-                // } else if (category === 'AT4') {
-                //     img.src = './img/tour_icon.png';
-                // }
-
-                // 이미지 로드 오류 시 대체 이미지 사용
-                // img.onerror = function () {
-                //     img.src = './img/tour_icon.png'; // 대체 이미지 경로
-                // };
-
-                // imgDiv.appendChild(img);
-
-                // 설명 추가
+                // 설명을 위한 descDiv 생성
                 const descDiv = document.createElement('div');
-                descDiv.className = 'desc';
-                descDiv.style.position = 'relative';
-                descDiv.style.margin = ' 0 0 90px';
-                descDiv.style.height = '75px';
-                descDiv.style.fontSize = '17px';
-                descDiv.style.overflow = 'hidden';
-                descDiv.style.textOverflow = 'ellipsis';
+                descDiv.className = 'overlay-desc'; // 클래스 이름 설정
+                descDiv.style.marginTop = '10px'; // 상단 여백 설정
+                descDiv.style.textAlign = 'center'; // 가운데 정렬
+                descDiv.style.fontSize = '13px'; // 폰트 크기 설정
+                descDiv.style.color = '#555'; // 글자 색상 설정
 
-                // 텍스트를 가로 및 세로 가운데 정렬
-                descDiv.style.display = 'flex flex-col';             // 플렉스 박스 사용
-                descDiv.style.alignItems = 'center';        // 세로 가운데 정렬
-                descDiv.style.justifyContent = 'center';    // 가로 가운데 정렬
-                descDiv.style.textAlign = 'center';         // 텍스트의 가로 정렬
-
-                const roadAddressSpan = document.createElement('span');
-                roadAddressSpan.title = place.road_address_name || place.address_name;
+                // 주소 정보 표시 (도로명 주소가 있으면 우선 표시, 없으면 지번 주소 표시)
+                const roadAddressSpan = document.createElement('p');
+                roadAddressSpan.title = place.road_address_name || place.address_name; // 도로명 주소 또는 지번 주소 설정
                 roadAddressSpan.textContent = place.road_address_name
-                    ? `도로명: ${place.road_address_name}`
-                    : `지번: ${place.address_name}`;
+                    ? `도로명 주소: ${place.road_address_name}` // 도로명 주소 표시
+                    : `지번 주소: ${place.address_name}`; // 지번 주소 표시
+                roadAddressSpan.style.margin = '5px 0'; // 상하 여백 설정
 
-                // const telSpan = document.createElement('span');
-                // telSpan.className = 'tel';
-                // telSpan.textContent = `전화: ${place.phone}`;
-                // telSpan.style.display = 'block';
-
+                // 장소 상세 페이지로 이동할 수 있는 링크 추가
                 const linkA = document.createElement('a');
-                linkA.href = place.place_url;
-                linkA.textContent = `${place.place_name} 상세페이지`;
-                linkA.style.color = 'blue';
-                linkA.style.display = 'block';
-                linkA.style.marginTop = '5px';
+                linkA.href = place.place_url; // 장소 상세 페이지 링크
+                linkA.textContent = `상세 페이지 보기`; // 링크 텍스트 설정
+                linkA.style.color = '#007BFF'; // 링크 색상을 파란색으로 설정
+                linkA.style.display = 'block'; // 블록 요소로 설정하여 한 줄 차지
+                linkA.style.marginTop = '5px'; // 상단 여백 설정
+                linkA.style.fontWeight = 'bold'; // 링크 글씨 굵게 설정
+                linkA.style.textDecoration = 'none'; // 밑줄 제거
 
+                // 링크를 새 창에서 열도록 설정 (보안 설정 포함)
                 linkA.target = '_blank';
-                linkA.rel = 'noopener noreferrer'; // 보안과 성능을 위해 추가
+                linkA.rel = 'noopener noreferrer'; // 보안 및 성능을 위해 추가
 
-                descDiv.appendChild(roadAddressSpan);
-                // descDiv.appendChild(telSpan);
-                descDiv.appendChild(linkA);
+                // 설명 구성: 주소 정보 및 상세 페이지 링크를 descDiv에 추가
+                descDiv.appendChild(roadAddressSpan); // 주소 정보 추가
+                descDiv.appendChild(linkA); // 상세 페이지 링크 추가
 
-                infoDiv.appendChild(descDiv);
-                content.appendChild(infoDiv);
-                // content.appendChild(img);
-                // infoDiv.appendChild(imgDiv);
+                // 모든 요소들을 infoDiv와 content에 추가
+                infoDiv.appendChild(descDiv); // 설명을 정보 디브에 추가
+                content.appendChild(infoDiv); // 최종적으로 정보 디브를 오버레이에 추가
 
-                return content;
+                return content; // 최종 오버레이 컨텐츠 반환
             };
 
 

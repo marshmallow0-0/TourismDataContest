@@ -2,7 +2,7 @@ import React from 'react';
 
 const SearchListButtons = ({ handleButtonClick, placeName, index }) => {
     const buttons = [
-        { category: '', id: 0, img: './img/info.png', label: '정보' },
+        { category: '', id: 0, img: './img/info.png', label: '여행코스' },
         { category: 'CE7', id: 1, img: './img/cafe.png', label: '카페' },
         { category: 'FD6', id: 2, img: './img/restaurant.png', label: '음식' },
         { category: 'AT4', id: 3, img: './img/tour.png', label: '관광' }
