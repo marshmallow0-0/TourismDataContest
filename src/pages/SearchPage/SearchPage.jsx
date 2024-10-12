@@ -12,6 +12,7 @@ import axios from 'axios';
 import { getDetailPlace } from "../../api/api";
 import Accordion from "./Accordion";
 import SearchCarousel from "./SearchCarousel";
+import RouteMap from "./RouteMap";
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 // 백엔드 서버 주소
@@ -81,7 +82,7 @@ export default function SearchPage() {
     // if (touristPlaces.length > 0) {
     //     console.log(touristPlaces[0].x); // 배열의 첫 번째 요소가 존재할 때만 콘솔 출력
     // }
-    // console.log(touristPlaces);
+    console.log(touristPlaces);
 
     return (
         <BasicLayout>
@@ -119,7 +120,6 @@ export default function SearchPage() {
 
                     {/* AI 분석 결과 제목 */}
 
-
                     {/* SearchCarousel 컴포넌트 */}
                     <div className="bg-white rounded-md p-6">
 
@@ -151,7 +151,28 @@ export default function SearchPage() {
                         <div className="rounded-md mt-4">
                             <div className="w-full sm:w-[700px] h-[300px] sm:h-[400px]">  {/* 반응형 크기 설정 */}
                                 {jsonData.length > 0 && (
-                                    <KakaoMap mapx={jsonData[selectedResultIndex].y} mapy={jsonData[selectedResultIndex].x} category={category} />
+                                    jsonData[selectedResultIndex].x === 0 || jsonData[selectedResultIndex].y === 0 ? (
+                                        <div className="flex flex-col justify-center items-center">
+                                            <img
+                                                src="./img/NotFound.png"
+                                                alt="Location not found"
+                                                className="w-full h-full"
+                                            />
+                                        </div>
+                                    ) : (
+                                        ButtonSelect === 0 ? (
+                                            <RouteMap
+                                                mapx={jsonData[selectedResultIndex].y}
+                                                mapy={jsonData[selectedResultIndex].x}
+                                            />
+                                        ) : (
+                                            <KakaoMap
+                                                mapx={jsonData[selectedResultIndex].y}
+                                                mapy={jsonData[selectedResultIndex].x}
+                                                category={category}
+                                            />
+                                        )
+                                    )
                                 )}
                             </div>
                         </div>
